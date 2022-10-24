@@ -1,0 +1,7 @@
+{
+  "name": "Alhamdian Admin",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}
