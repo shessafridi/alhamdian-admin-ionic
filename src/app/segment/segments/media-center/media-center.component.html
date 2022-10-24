@@ -1,0 +1,13 @@
+<ng-container *ngIf="loading">
+  Loading please wait.
+</ng-container>
+<ng-container *ngIf="!loading && !segment">
+  <ion-text>Data Failed to load.</ion-text>
+</ng-container>
+<ng-container *ngIf="!loading && segment">
+  <ion-list>
+    <ion-item *ngFor="let item of segment.data">
+      <ion-label>{{item.title}}</ion-label>
+    </ion-item>
+  </ion-list>
+</ng-container>

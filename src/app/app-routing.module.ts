@@ -17,6 +17,7 @@ const routes: Routes = [
     path: 'dashboard',
     loadChildren: () =>
       import('./segment/segment.module').then((m) => m.SegmentPageModule),
+    canActivate: [AuthGuard],
   },
 ];
 

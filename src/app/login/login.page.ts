@@ -33,7 +33,7 @@ export class LoginPage implements OnInit {
       .subscribe({
         next: () => {
           console.log('Logged In');
-          this.router.navigate(['']);
+          this.router.navigate(['/']);
         },
         error: (err: Error) => {
           if (err instanceof InvalidCredentialsError) {

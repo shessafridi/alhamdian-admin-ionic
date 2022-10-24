@@ -1,3 +1,4 @@
+import { environment } from 'src/environments/environment';
 import { Inject, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { RouteReuseStrategy } from '@angular/router';
@@ -23,8 +24,8 @@ function tokenGetter() {
     HttpClientModule,
     JwtModule.forRoot({
       config: {
-        tokenGetter,
-        skipWhenExpired: true,
+        tokenGetter: tokenGetter,
+        allowedDomains: [new URL(environment.apiUrl).hostname],
       },
     }),
   ],

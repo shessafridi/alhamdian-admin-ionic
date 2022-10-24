@@ -11,10 +11,15 @@
       <ion-content>
         <ion-list id="labels-list">
           <ion-menu-toggle auto-hide="false">
-            <ion-item routerDirection="root" [routerLink]="['dashboard']" lines="none" detail="false"
+            <ion-item routerDirection="root" [routerLink]="['main']" lines="none" detail="false"
               routerLinkActive="selected">
               <ion-icon slot="start" [ios]="'mail-outline'" [md]="'mail-sharp'"></ion-icon>
               <ion-label>Dashboard</ion-label>
+            </ion-item>
+            <ion-item routerDirection="root" [routerLink]="['media-center']" lines="none" detail="false"
+              routerLinkActive="selected">
+              <ion-icon slot="start" [ios]="'mail-outline'" [md]="'mail-sharp'"></ion-icon>
+              <ion-label>Media Center</ion-label>
             </ion-item>
           </ion-menu-toggle>
         </ion-list>
