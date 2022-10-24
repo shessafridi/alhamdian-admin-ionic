@@ -4,17 +4,17 @@ import { FormsModule } from '@angular/forms';
 
 import { IonicModule } from '@ionic/angular';
 
-import { FolderPageRoutingModule } from './folder-routing.module';
+import { SegmentPageRoutingModule } from './segment-routing.module';
 
-import { FolderPage } from './folder.page';
+import { SegmentPage } from './segment.page';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    FolderPageRoutingModule
+    SegmentPageRoutingModule
   ],
-  declarations: [FolderPage]
+  declarations: [SegmentPage]
 })
-export class FolderPageModule {}
+export class SegmentPageModule {}

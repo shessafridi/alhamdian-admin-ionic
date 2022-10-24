@@ -1,0 +1,27 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Alhamdian Dashboard</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-split-pane contentId="main">
+    <!--  the side menu  -->
+    <ion-menu contentId="main">
+      <ion-content>
+        <ion-list id="labels-list">
+          <ion-menu-toggle auto-hide="false">
+            <ion-item routerDirection="root" [routerLink]="['dashboard']" lines="none" detail="false"
+              routerLinkActive="selected">
+              <ion-icon slot="start" [ios]="'mail-outline'" [md]="'mail-sharp'"></ion-icon>
+              <ion-label>Dashboard</ion-label>
+            </ion-item>
+          </ion-menu-toggle>
+        </ion-list>
+      </ion-content>
+    </ion-menu>
+
+    <!-- the main content -->
+    <ion-router-outlet id="main"></ion-router-outlet>
+  </ion-split-pane>
+</ion-content>

@@ -5,19 +5,18 @@ import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 const routes: Routes = [
   {
     path: '',
-    redirectTo: 'folder/Inbox',
+    redirectTo: 'dashboard',
     pathMatch: 'full',
-  },
-  {
-    path: 'folder/:id',
-    loadChildren: () =>
-      import('./folder/folder.module').then((m) => m.FolderPageModule),
-    canActivate: [AuthGuard],
   },
   {
     path: 'login',
     loadChildren: () =>
       import('./login/login.module').then((m) => m.LoginPageModule),
+  },
+  {
+    path: 'dashboard',
+    loadChildren: () =>
+      import('./segment/segment.module').then((m) => m.SegmentPageModule),
   },
 ];
 
