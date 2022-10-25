@@ -12,20 +12,22 @@ import { MediaCenterComponent } from './segments/media-center/media-center.compo
 import { MaterialModule } from '../material.module';
 import { ListViewComponent } from './segments/list-view/list-view.component';
 import { SharedModule } from '../common/shared.module';
+import { HeaderComponent } from './segments/header/header.component';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    SegmentPageRoutingModule,
     MaterialModule,
     SharedModule,
+    SegmentPageRoutingModule,
   ],
   declarations: [
     SegmentPage,
     DashboardComponent,
     MediaCenterComponent,
+    HeaderComponent,
     ListViewComponent,
   ],
 })

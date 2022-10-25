@@ -3,6 +3,7 @@ import { Routes, RouterModule } from '@angular/router';
 
 import { SegmentPage } from './segment.page';
 import { DashboardComponent } from './segments/dashboard/dashboard.component';
+import { HeaderComponent } from './segments/header/header.component';
 import { MediaCenterComponent } from './segments/media-center/media-center.component';
 
 const routes: Routes = [
@@ -18,6 +19,10 @@ const routes: Routes = [
       {
         path: 'main',
         component: DashboardComponent,
+      },
+      {
+        path: 'header',
+        component: HeaderComponent,
       },
       {
         path: 'media-center',
