@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { LoadingController } from '@ionic/angular';
-import { finalize, map } from 'rxjs';
+import { finalize } from 'rxjs';
 import { MappedSegment } from 'src/app/models/data/mapped-segment';
 import { Segments } from 'src/app/models/data/segment';
 import { MediaCenterSegment } from 'src/app/models/data/segment-media-center';
+import { ConfirmDialogService } from 'src/app/services/confirm-dialog.service';
 import { SegmentService } from 'src/app/services/segment.service';
 
 @Component({
@@ -12,12 +13,14 @@ import { SegmentService } from 'src/app/services/segment.service';
   styleUrls: ['./media-center.component.scss'],
 })
 export class MediaCenterComponent implements OnInit {
+  displayedColumns: string[] = ['id', 'title', 'date', 'actions'];
   loading = false;
   segment: MappedSegment<MediaCenterSegment[]> | null = null;
 
   constructor(
     private segmentService: SegmentService,
-    private loadingCtrl: LoadingController
+    private loadingCtrl: LoadingController,
+    private confirmDialogService: ConfirmDialogService
   ) {}
 
   async ngOnInit() {
@@ -37,5 +40,10 @@ export class MediaCenterComponent implements OnInit {
       .subscribe((mediaCenter) => {
         this.segment = mediaCenter;
       });
+  }
+
+  async onDelete(id: number) {
+    const allowed = await this.confirmDialogService.ask();
+    if (!allowed) return;
   }
 }

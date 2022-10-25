@@ -10,6 +10,7 @@ import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { JwtModule } from '@auth0/angular-jwt';
 import { TOKEN_KEY } from './services/token.service';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 function tokenGetter() {
   return localStorage.getItem(TOKEN_KEY);
@@ -28,6 +29,7 @@ function tokenGetter() {
         allowedDomains: [new URL(environment.apiUrl).hostname],
       },
     }),
+    BrowserAnimationsModule,
   ],
   providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy }],
   bootstrap: [AppComponent],

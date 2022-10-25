@@ -1,13 +1,39 @@
-<ng-container *ngIf="loading">
+<!-- <ng-container *ngIf="loading">
   Loading please wait.
 </ng-container>
 <ng-container *ngIf="!loading && !segment">
   <ion-text>Data Failed to load.</ion-text>
 </ng-container>
 <ng-container *ngIf="!loading && segment">
-  <ion-list>
-    <ion-item *ngFor="let item of segment.data">
-      <ion-label>{{item.title}}</ion-label>
-    </ion-item>
-  </ion-list>
-</ng-container>
+  <app-list-view>
+    <ng-container ngProjectAs="[table]">
+      <table mat-table [dataSource]="segment.data" class="mat-elevation-z8">
+        <ng-container matColumnDef="id">
+          <th style="padding-right: 30px;" mat-header-cell *matHeaderCellDef>Id</th>
+          <td mat-cell *matCellDef="let element">{{element.id}}</td>
+        </ng-container>
+        <ng-container matColumnDef="title">
+          <th mat-header-cell *matHeaderCellDef>Title</th>
+          <td mat-cell *matCellDef="let element">{{element.title}}</td>
+        </ng-container>
+        <ng-container matColumnDef="date">
+          <th style="min-width: 120px;" mat-header-cell *matHeaderCellDef>Date</th>
+          <td mat-cell *matCellDef="let element">{{element.date | date}}</td>
+        </ng-container>
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef>Actions</th>
+          <td style="min-width: 120px;" mat-cell *matCellDef="let element">
+            <button color="primary" mat-icon-button>
+              <mat-icon>edit</mat-icon>
+            </button>
+            <button (click)="onDelete(element.id)" color="warn" mat-icon-button>
+              <mat-icon>delete</mat-icon>
+            </button>
+          </td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      </table>
+    </ng-container>
+  </app-list-view>
+</ng-container> -->

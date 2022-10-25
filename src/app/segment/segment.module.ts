@@ -9,9 +9,24 @@ import { SegmentPageRoutingModule } from './segment-routing.module';
 import { SegmentPage } from './segment.page';
 import { DashboardComponent } from './segments/dashboard/dashboard.component';
 import { MediaCenterComponent } from './segments/media-center/media-center.component';
+import { MaterialModule } from '../material.module';
+import { ListViewComponent } from './segments/list-view/list-view.component';
+import { SharedModule } from '../common/shared.module';
 
 @NgModule({
-  imports: [CommonModule, FormsModule, IonicModule, SegmentPageRoutingModule],
-  declarations: [SegmentPage, DashboardComponent, MediaCenterComponent],
+  imports: [
+    CommonModule,
+    FormsModule,
+    IonicModule,
+    SegmentPageRoutingModule,
+    MaterialModule,
+    SharedModule,
+  ],
+  declarations: [
+    SegmentPage,
+    DashboardComponent,
+    MediaCenterComponent,
+    ListViewComponent,
+  ],
 })
 export class SegmentPageModule {}
