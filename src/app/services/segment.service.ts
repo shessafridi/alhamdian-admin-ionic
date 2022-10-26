@@ -138,9 +138,9 @@ export class SegmentService {
     return of(null).pipe(
       // Simulating a network request
       delay(1000),
-      tap(() => {
-        throw Error('An error occured while saving the record');
-      }),
+      // tap(() => {
+      //   throw new Error('An error occured while saving the record');
+      // }),
       map(() => dbSegment)
     );
   }

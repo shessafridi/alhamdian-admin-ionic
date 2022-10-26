@@ -50,6 +50,7 @@ export class MediaCenterComponent implements OnInit, OnDestroy {
   }
 
   addNew() {
+    if (!this.segment) return;
     const newRecord: MediaCenterSegment = {
       id: v4(),
       date: new Date().toJSON(),
@@ -57,9 +58,9 @@ export class MediaCenterComponent implements OnInit, OnDestroy {
       gallery: [],
       imageUrl: '',
     };
-    if (this.segment) {
-      this.segment.data = [...this.segment.data, newRecord];
-    }
+    const data = this.segment.data;
+    this.segment.data = [...data, newRecord];
+
     this.segmentService
       .addRecord<MediaCenterSegment>(Segments.MediaCenter, newRecord)
       .subscribe({
@@ -67,19 +68,37 @@ export class MediaCenterComponent implements OnInit, OnDestroy {
           console.log({ res }, 'ADD RESPONSE');
         },
         error: (err) => {
-          if (this.segment) {
-            this.segment.data = this.segment.data.filter(
-              (d) => d.id !== newRecord.id
-            );
-          }
+          this.segment.data = [...this.segment.data].filter(
+            (d) => d.id !== newRecord.id
+          );
           console.log({ err });
         },
       });
   }
 
   async onDelete(id: number) {
+    if (!this.segment) return;
     const allowed = await this.confirmDialogService.ask();
     if (!allowed) return;
+
+    const data = [...this.segment.data];
+    const found = data.find((d) => d.id === id);
+    if (!found) return;
+    const index = data.indexOf(found);
+
+    this.segment.data = data.filter((d) => d.id !== id);
+
+    this.segmentService.deleteRecord(Segments.MediaCenter, id).subscribe({
+      next: (res) => {
+        console.log({ res }, 'DELETE RESPONSE');
+      },
+      error: (err) => {
+        const existingData = [...this.segment.data];
+        existingData.splice(index, 0, found);
+        this.segment.data = existingData;
+        console.log({ err });
+      },
+    });
   }
 
   ngOnDestroy(): void {
