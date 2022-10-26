@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 
 @Component({
   selector: 'app-list-view',
@@ -7,8 +7,14 @@ import { Component, Input, OnInit } from '@angular/core';
 })
 export class ListViewComponent implements OnInit {
   @Input() title = 'List View';
+  @Input() showActions = false;
+  @Output() add = new EventEmitter<void>();
 
   constructor() {}
 
   ngOnInit() {}
+
+  addData() {
+    this.add.emit();
+  }
 }

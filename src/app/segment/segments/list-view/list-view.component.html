@@ -1,5 +1,11 @@
 <div class="list-view">
   <ion-title size="large" class="title">{{title}}</ion-title>
+  <div *ngIf="showActions" class="action-button-container">
+    <button color="primary" mat-raised-button (click)="addData()" class="action-button">
+      Add New
+    </button>
+  </div>
+
   <div class="table-container">
     <ng-content select="[table]"></ng-content>
   </div>

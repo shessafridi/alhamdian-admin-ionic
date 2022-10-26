@@ -6,3 +6,13 @@
     margin-bottom: 20px;
   }
 }
+
+.action-button-container {
+  padding-bottom: 16px;
+  display: flex;
+  justify-content: end;
+}
+
+.action-button+.action-button {
+  margin-left: 8px;
+}

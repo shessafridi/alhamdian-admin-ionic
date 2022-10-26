@@ -1,5 +1,6 @@
 export interface Segment {
   SegmentID: number;
+  SegmentDetailID: number;
   Title: Segments;
   Details: string;
 }

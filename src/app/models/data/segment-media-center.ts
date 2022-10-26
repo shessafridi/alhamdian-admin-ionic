@@ -1,5 +1,5 @@
 export interface MediaCenterSegment {
-  id: number;
+  id: number | string;
   title: string;
   date: string;
   gallery?: Gallery[];

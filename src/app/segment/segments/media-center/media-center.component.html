@@ -6,7 +6,7 @@
     <ion-text>Data Failed to load.</ion-text>
   </ng-container>
   <ng-container *ngIf="!loading && segment">
-    <app-list-view [title]="'Media Center'">
+    <app-list-view [title]="'Media Center'" [showActions]="true" (add)="addNew()">
       <ng-container ngProjectAs="[table]">
         <table mat-table [dataSource]="segment.data" class="mat-elevation-z8">
           <ng-container matColumnDef="id">
