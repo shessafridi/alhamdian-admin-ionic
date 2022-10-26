@@ -1,13 +1,4 @@
-<!-- <ion-header id="main">
-  <ion-toolbar>
-    <ion-buttons slot="start">
-      <ion-menu-button></ion-menu-button>
-    </ion-buttons>
-    <ion-title>Alhamdian Dashboard</ion-title>
-  </ion-toolbar>
-</ion-header> -->
-
-<ion-menu [type]="'push'" contentId="dashboard">
+<!-- <ion-menu [type]="'push'" contentId="dashboard">
   <ion-header>
     <ion-toolbar>
       <ion-title>Menu</ion-title>
@@ -48,4 +39,48 @@
   <ion-content>
     <ion-router-outlet id="dashboard"></ion-router-outlet>
   </ion-content>
-</div>
+</div> -->
+<ion-split-pane contentId="dashboard">
+  <ion-menu contentId="dashboard" type="overlay">
+    <ion-content>
+      <ion-list id="inbox-list">
+        <ion-list-header>Menu</ion-list-header>
+        <ion-menu-toggle auto-hide="false">
+          <ion-item routerDirection="root" [routerLink]="['/dashboard/main']" lines="none" detail="false"
+            routerLinkActive="selected">
+            <ion-icon slot="start" [ios]="'mail-outline'" [md]="'mail-sharp'"></ion-icon>
+            <ion-label>Dashboard</ion-label>
+          </ion-item>
+        </ion-menu-toggle>
+        <ion-menu-toggle auto-hide="false">
+          <ion-item routerDirection="root" [routerLink]="['/dashboard/header']" lines="none" detail="false"
+            routerLinkActive="selected">
+            <ion-icon slot="start" [ios]="'mail-outline'" [md]="'mail-sharp'"></ion-icon>
+            <ion-label>Header</ion-label>
+          </ion-item>
+        </ion-menu-toggle>
+        <ion-menu-toggle auto-hide="false">
+          <ion-item routerDirection="root" [routerLink]="['/dashboard/media-center']" lines="none" detail="false"
+            routerLinkActive="selected">
+            <ion-icon slot="start" [ios]="'mail-outline'" [md]="'mail-sharp'"></ion-icon>
+            <ion-label>Media Center</ion-label>
+          </ion-item>
+        </ion-menu-toggle>
+      </ion-list>
+      <!-- 
+      <ion-list id="labels-list">
+        <ion-list-header>Labels</ion-list-header>
+
+        <ion-item *ngFor="let label of labels" lines="none">
+          <ion-icon slot="start" ios="bookmark-outline" md="bookmark-sharp"></ion-icon>
+          <ion-label>{{ label }}</ion-label>
+        </ion-item>
+      </ion-list> -->
+    </ion-content>
+  </ion-menu>
+
+
+
+  <ion-router-outlet id="dashboard"></ion-router-outlet>
+
+</ion-split-pane>

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-list-view',
@@ -6,9 +6,9 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./list-view.component.scss'],
 })
 export class ListViewComponent implements OnInit {
+  @Input() title = 'List View';
 
-  constructor() { }
+  constructor() {}
 
   ngOnInit() {}
-
 }

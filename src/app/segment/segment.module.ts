@@ -13,6 +13,7 @@ import { MaterialModule } from '../material.module';
 import { ListViewComponent } from './segments/list-view/list-view.component';
 import { SharedModule } from '../common/shared.module';
 import { HeaderComponent } from './segments/header/header.component';
+import { NavbarWrapperComponent } from './segments/navbar-wrapper/navbar-wrapper.component';
 
 @NgModule({
   imports: [
@@ -29,6 +30,7 @@ import { HeaderComponent } from './segments/header/header.component';
     MediaCenterComponent,
     HeaderComponent,
     ListViewComponent,
+    NavbarWrapperComponent,
   ],
 })
 export class SegmentPageModule {}
