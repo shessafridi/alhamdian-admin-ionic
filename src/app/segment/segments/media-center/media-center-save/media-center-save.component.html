@@ -1,6 +1,39 @@
 <app-save-dialog-scaffold [title]="data ? 'Update ' : 'Create ' + 'Media Center'" [buttonConfig]="buttonConfig">
-  <ion-item>
-    <ion-label position="stacked">Your name</ion-label>
-    <ion-input ngModel placeholder="Your name"></ion-input>
-  </ion-item>
+  <mat-stepper [linear]="true" #stepper>
+    <mat-step [stepControl]="mainGroup" label="Add Details">
+      <mat-grid-list cols="2" rowHeight="1:1">
+        <mat-grid-tile>
+          <form [formGroup]="mainGroup">
+            <mat-form-field appearance="fill">
+              <mat-label>Title</mat-label>
+              <input matInput placeholder="Title" formControlName="title">
+            </mat-form-field>
+            <div>
+              <button mat-button matStepperNext>Next</button>
+            </div>
+          </form>
+        </mat-grid-tile>
+        <mat-grid-tile>2</mat-grid-tile>
+      </mat-grid-list>
+
+    </mat-step>
+    <mat-step [stepControl]="formGroup.get('mainGroup')" label="Add Content">
+      <form [formGroup]="imageGroup">
+
+        <div>
+          <button mat-button matStepperPrevious>Back</button>
+          <button mat-button matStepperNext>Next</button>
+        </div>
+      </form>
+    </mat-step>
+    <mat-step>
+      <ng-template matStepLabel>Done</ng-template>
+      <p>You are now done.</p>
+      <div>
+        <button mat-button matStepperPrevious>Back</button>
+        <button mat-button (click)="stepper.reset()">Reset</button>
+      </div>
+    </mat-step>
+  </mat-stepper>
+
 </app-save-dialog-scaffold>

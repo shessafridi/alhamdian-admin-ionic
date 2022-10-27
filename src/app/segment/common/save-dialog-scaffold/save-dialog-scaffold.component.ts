@@ -15,7 +15,7 @@ export class SaveDialogScaffoldComponent implements OnInit {
     color?: string;
     fill?: string;
     size?: string;
-    disabled?: boolean;
+    disabled?: () => boolean;
   }[] = [];
 
   constructor() {}

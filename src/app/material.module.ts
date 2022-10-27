@@ -9,6 +9,8 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
 import { MatRippleModule } from '@angular/material/core';
 import { MatDialogModule } from '@angular/material/dialog';
+import { MatGridListModule } from '@angular/material/grid-list';
+import { MatStepperModule } from '@angular/material/stepper';
 
 @NgModule({
   exports: [
@@ -22,6 +24,8 @@ import { MatDialogModule } from '@angular/material/dialog';
     MatSortModule,
     MatRippleModule,
     MatDialogModule,
+    MatGridListModule,
+    MatStepperModule,
   ],
 })
 export class MaterialModule {}

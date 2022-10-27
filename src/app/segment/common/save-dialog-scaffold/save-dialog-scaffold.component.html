@@ -9,8 +9,9 @@
 <ion-footer>
   <ion-toolbar>
     <ion-buttons slot="end">
-      <ion-button *ngFor="let btn of buttonConfig" [disabled]="btn.disabled || false" [size]="btn.size || 'large'"
-        [fill]=" btn.fill || 'solid'" [classList]=" btn.cssClass" [color]="btn.color || ''" (click)="btn.onClick()">
+      <ion-button *ngFor="let btn of buttonConfig" [disabled]="(btn.disabled && btn.disabled()) || false"
+        [size]="btn.size || 'large'" [fill]=" btn.fill || 'solid'" [classList]=" btn.cssClass" [color]="btn.color || ''"
+        (click)="btn.onClick()">
         {{btn.label}}
       </ion-button>
     </ion-buttons>
