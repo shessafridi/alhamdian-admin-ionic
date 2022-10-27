@@ -1,12 +1,14 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { LoadingController } from '@ionic/angular';
-import { finalize, Subject, takeUntil } from 'rxjs';
+import { finalize, lastValueFrom, Subject, takeUntil } from 'rxjs';
 import { MappedSegment } from 'src/app/models/data/mapped-segment';
 import { Segments } from 'src/app/models/data/segment';
 import { MediaCenterSegment } from 'src/app/models/data/segment-media-center';
 import { ConfirmDialogService } from 'src/app/services/confirm-dialog.service';
 import { SegmentService } from 'src/app/services/segment.service';
 import { v4 } from 'uuid';
+import { MediaCenterSaveComponent } from './media-center-save/media-center-save.component';
 @Component({
   selector: 'app-media-center',
   templateUrl: './media-center.component.html',
@@ -22,7 +24,8 @@ export class MediaCenterComponent implements OnInit, OnDestroy {
   constructor(
     private segmentService: SegmentService,
     private loadingCtrl: LoadingController,
-    private confirmDialogService: ConfirmDialogService
+    private confirmDialogService: ConfirmDialogService,
+    private dialog: MatDialog
   ) {}
 
   async ngOnInit() {
@@ -49,8 +52,17 @@ export class MediaCenterComponent implements OnInit, OnDestroy {
       });
   }
 
-  addNew() {
+  async addNew() {
     if (!this.segment) return;
+
+    const dialogRef = this.dialog.open(MediaCenterSaveComponent, {
+      data: null,
+    });
+    const result = await lastValueFrom(dialogRef.afterClosed());
+    if (!result) return;
+
+    console.log('Dialog Result', { result });
+
     const newRecord: MediaCenterSegment = {
       id: v4(),
       date: new Date().toJSON(),

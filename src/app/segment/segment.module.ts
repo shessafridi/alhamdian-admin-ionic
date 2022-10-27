@@ -1,19 +1,15 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-
 import { IonicModule } from '@ionic/angular';
-
-import { SegmentPageRoutingModule } from './segment-routing.module';
-
-import { SegmentPage } from './segment.page';
-import { DashboardComponent } from './segments/dashboard/dashboard.component';
-import { MediaCenterComponent } from './segments/media-center/media-center.component';
 import { MaterialModule } from '../material.module';
-import { ListViewComponent } from './segments/list-view/list-view.component';
 import { SharedModule } from '../common/shared.module';
-import { HeaderComponent } from './segments/header/header.component';
-import { NavbarWrapperComponent } from './segments/navbar-wrapper/navbar-wrapper.component';
+import { SegmentPageRoutingModule } from './segment-routing.module';
+import { SegmentPage } from './segment.page';
+
+import { DashboardModule } from './segments/dashboard/dashboard.module';
+import { HeaderModule } from './segments/header/header.module';
+import { MediaCenterModule } from './segments/media-center/media-center.module';
 
 @NgModule({
   imports: [
@@ -23,14 +19,11 @@ import { NavbarWrapperComponent } from './segments/navbar-wrapper/navbar-wrapper
     MaterialModule,
     SharedModule,
     SegmentPageRoutingModule,
+
+    DashboardModule,
+    HeaderModule,
+    MediaCenterModule,
   ],
-  declarations: [
-    SegmentPage,
-    DashboardComponent,
-    MediaCenterComponent,
-    HeaderComponent,
-    ListViewComponent,
-    NavbarWrapperComponent,
-  ],
+  declarations: [SegmentPage],
 })
 export class SegmentPageModule {}
