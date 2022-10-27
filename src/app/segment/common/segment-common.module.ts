@@ -4,10 +4,19 @@ import { NavbarWrapperComponent } from './navbar-wrapper/navbar-wrapper.componen
 import { ListViewComponent } from './list-view/list-view.component';
 import { IonicModule } from '@ionic/angular';
 import { MaterialModule } from 'src/app/material.module';
+import { SaveDialogScaffoldComponent } from './save-dialog-scaffold/save-dialog-scaffold.component';
 
 @NgModule({
-  declarations: [NavbarWrapperComponent, ListViewComponent],
-  exports: [NavbarWrapperComponent, ListViewComponent],
+  declarations: [
+    NavbarWrapperComponent,
+    ListViewComponent,
+    SaveDialogScaffoldComponent,
+  ],
+  exports: [
+    NavbarWrapperComponent,
+    ListViewComponent,
+    SaveDialogScaffoldComponent,
+  ],
   imports: [CommonModule, IonicModule, MaterialModule],
 })
 export class SegmentCommonModule {}

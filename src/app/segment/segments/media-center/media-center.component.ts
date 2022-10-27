@@ -1,6 +1,7 @@
+import { ViewportService } from './../../../services/viewport.service';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { LoadingController } from '@ionic/angular';
+import { LoadingController, ModalController } from '@ionic/angular';
 import { finalize, lastValueFrom, Subject, takeUntil } from 'rxjs';
 import { MappedSegment } from 'src/app/models/data/mapped-segment';
 import { Segments } from 'src/app/models/data/segment';
@@ -15,7 +16,24 @@ import { MediaCenterSaveComponent } from './media-center-save/media-center-save.
   styleUrls: ['./media-center.component.scss'],
 })
 export class MediaCenterComponent implements OnInit, OnDestroy {
-  displayedColumns: string[] = ['id', 'title', 'date', 'actions'];
+  private availableColumns = [
+    {
+      name: 'id',
+      hideOn: ['xsm'],
+    },
+
+    {
+      name: 'title',
+    },
+    {
+      name: 'date',
+    },
+    {
+      name: 'actions',
+    },
+  ];
+
+  displayedColumns: string[] = [];
   loading = false;
   segment: MappedSegment<MediaCenterSegment[]> | null = null;
 
@@ -25,8 +43,37 @@ export class MediaCenterComponent implements OnInit, OnDestroy {
     private segmentService: SegmentService,
     private loadingCtrl: LoadingController,
     private confirmDialogService: ConfirmDialogService,
-    private dialog: MatDialog
-  ) {}
+    private dialog: MatDialog,
+    public readonly viewportService: ViewportService,
+    private modalController: ModalController
+  ) {
+    this.viewportService.observe$
+      .pipe(takeUntil(this.dispose$))
+      .subscribe((breakpoints) => {
+        this.calculateVisableColumns(breakpoints);
+      });
+  }
+
+  private calculateVisableColumns(breakpoints: {
+    xsm: boolean;
+    sm: boolean;
+    md: boolean;
+    lg: boolean;
+    xlg: boolean;
+  }) {
+    let temp = [...this.availableColumns];
+    if (breakpoints.xsm)
+      temp = temp.filter((d) => !d.hideOn || !d.hideOn.includes('xsm'));
+    if (breakpoints.sm)
+      temp = temp.filter((d) => !d.hideOn || !d.hideOn.includes('sm'));
+    if (breakpoints.md)
+      temp = temp.filter((d) => !d.hideOn || !d.hideOn.includes('md'));
+    if (breakpoints.lg)
+      temp = temp.filter((d) => !d.hideOn || !d.hideOn.includes('lg'));
+    if (breakpoints.xlg)
+      temp = temp.filter((d) => !d.hideOn || !d.hideOn.includes('xlg'));
+    this.displayedColumns = temp.map((t) => t.name);
+  }
 
   async ngOnInit() {
     const ctrler = await this.loadingCtrl.create({
@@ -52,16 +99,27 @@ export class MediaCenterComponent implements OnInit, OnDestroy {
       });
   }
 
+  async getSaveData<T>(
+    modalData: MediaCenterSegment | null
+  ): Promise<T | null> {
+    const modal = await this.modalController.create({
+      component: MediaCenterSaveComponent,
+      componentProps: {
+        data: modalData ? JSON.parse(JSON.stringify(modalData)) : null,
+      },
+      cssClass: 'save-modal',
+    });
+
+    modal.present();
+
+    const { data, role } = await modal.onWillDismiss();
+
+    return data || null;
+  }
+
   async addNew() {
     if (!this.segment) return;
-
-    const dialogRef = this.dialog.open(MediaCenterSaveComponent, {
-      data: null,
-    });
-    const result = await lastValueFrom(dialogRef.afterClosed());
-    if (!result) return;
-
-    console.log('Dialog Result', { result });
+    const newRecord2 = await this.getSaveData(null);
 
     const newRecord: MediaCenterSegment = {
       id: v4(),
@@ -70,8 +128,8 @@ export class MediaCenterComponent implements OnInit, OnDestroy {
       gallery: [],
       imageUrl: '',
     };
-    const data = this.segment.data;
-    this.segment.data = [...data, newRecord];
+    const segmentData = this.segment.data;
+    this.segment.data = [...segmentData, newRecord];
 
     this.segmentService
       .addRecord<MediaCenterSegment>(Segments.MediaCenter, newRecord)
