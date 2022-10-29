@@ -1,11 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import {
-  FormBuilder,
-  FormGroup,
-  Validators,
-  FormControl,
-  FormArray,
-} from '@angular/forms';
 import { ModalController } from '@ionic/angular';
 import { MediaCenterSegment } from 'src/app/models/data/segment-media-center';
 
@@ -16,42 +9,7 @@ import { MediaCenterSegment } from 'src/app/models/data/segment-media-center';
 })
 export class MediaCenterSaveComponent implements OnInit {
   data: MediaCenterSegment | null = null;
-
-  formGroup = this._formBuilder.group({
-    mainGroup: this._formBuilder.group({
-      title: [''],
-      date: [''],
-      imageFile: [''],
-      imageFileControl: [''],
-    }),
-    imageGroup: this._formBuilder.group({
-      gallery: this._formBuilder.array<{
-        imageFile: FormControl<string>;
-        imageFileControl: FormControl<string>;
-        ytLink: FormControl<string>;
-      }>([]),
-    }),
-  });
-
-  get mainGroup(): FormGroup<{
-    title: FormControl<string>;
-    date: FormControl<string>;
-    imageFile: FormControl<string>;
-    imageFileControl: FormControl<string>;
-  }> {
-    return this.formGroup.get('mainGroup') as FormGroup;
-  }
-  get imageGroup(): FormGroup<{
-    gallery: FormArray<
-      FormControl<{
-        imageFile: FormControl<string>;
-        imageFileControl: FormControl<string>;
-        ytLink: FormControl<string>;
-      }>
-    >;
-  }> {
-    return this.formGroup.get('imageGroup') as FormGroup;
-  }
+  page: 'details' | 'content' = 'details';
 
   buttonConfig = [
     {
@@ -61,22 +19,39 @@ export class MediaCenterSaveComponent implements OnInit {
       fill: 'clear',
     },
     {
+      label: 'Back',
+      onClick: () => this.back(),
+      fill: 'clear',
+      show: () => this.page === 'content',
+    },
+    {
+      label: 'Next',
+      onClick: () => this.next(),
+      color: 'primary',
+      fill: 'solid',
+      disabled: () => false,
+      show: () => this.page === 'details',
+    },
+    {
       label: 'Save',
       onClick: () => this.confirm(),
       color: 'primary',
       fill: 'solid',
       disabled: () => true,
+      show: () => this.page === 'content',
     },
   ];
 
-  constructor(
-    private modalCtrl: ModalController,
-    private _formBuilder: FormBuilder
-  ) {
-    const g = this.formGroup.get('mainGroup');
-  }
+  constructor(private modalCtrl: ModalController) {}
 
   ngOnInit() {}
+
+  next() {
+    this.page = 'content';
+  }
+  back() {
+    this.page = 'details';
+  }
 
   cancel() {
     return this.modalCtrl.dismiss(null, 'cancel');

@@ -1,0 +1,35 @@
+$dragzone-bg: #efefef;
+$dragzone-dark-bg: rgb(34, 36, 40);
+
+.dragzone {
+
+  background-color: $dragzone-bg;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  min-height: 150px;
+  transition: background-color 80ms ease-in-out;
+  cursor: pointer;
+
+  &:hover {
+    background-color: darken($dragzone-bg, 10%);
+  }
+
+  &.dragzone-active {
+    background-color: darken($dragzone-bg, 10%);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    background-color: $dragzone-dark-bg;
+
+    &:hover {
+      background-color: lighten($dragzone-dark-bg, 10%);
+    }
+
+    &.dragzone-active {
+      background-color: lighten($dragzone-dark-bg, 10%);
+    }
+
+  }
+}

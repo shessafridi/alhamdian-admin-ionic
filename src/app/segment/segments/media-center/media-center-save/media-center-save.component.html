@@ -1,39 +1,27 @@
 <app-save-dialog-scaffold [title]="data ? 'Update ' : 'Create ' + 'Media Center'" [buttonConfig]="buttonConfig">
-  <mat-stepper [linear]="true" #stepper>
-    <mat-step [stepControl]="mainGroup" label="Add Details">
-      <mat-grid-list cols="2" rowHeight="1:1">
-        <mat-grid-tile>
-          <form [formGroup]="mainGroup">
-            <mat-form-field appearance="fill">
-              <mat-label>Title</mat-label>
-              <input matInput placeholder="Title" formControlName="title">
-            </mat-form-field>
-            <div>
-              <button mat-button matStepperNext>Next</button>
-            </div>
-          </form>
-        </mat-grid-tile>
-        <mat-grid-tile>2</mat-grid-tile>
-      </mat-grid-list>
-
-    </mat-step>
-    <mat-step [stepControl]="formGroup.get('mainGroup')" label="Add Content">
-      <form [formGroup]="imageGroup">
-
-        <div>
-          <button mat-button matStepperPrevious>Back</button>
-          <button mat-button matStepperNext>Next</button>
+  <form style="height: 100%">
+    <mat-grid-list *ngIf="page === 'details'" cols="2" rowHeight="2:2" [gutterSize]="'30'">
+      <mat-grid-tile>
+        <div class="expand center-y">
+          <mat-form-field appearance="outline">
+            <mat-label>Title</mat-label>
+            <input matInput>
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Date</mat-label>
+            <input matInput type="date">
+          </mat-form-field>
         </div>
-      </form>
-    </mat-step>
-    <mat-step>
-      <ng-template matStepLabel>Done</ng-template>
-      <p>You are now done.</p>
-      <div>
-        <button mat-button matStepperPrevious>Back</button>
-        <button mat-button (click)="stepper.reset()">Reset</button>
-      </div>
-    </mat-step>
-  </mat-stepper>
-
+      </mat-grid-tile>
+      <mat-grid-tile>
+        <div class="expand center-y">
+          <app-file-uploader [allowedTypes]="['image/png', 'image/jpeg']"></app-file-uploader>
+        </div>
+      </mat-grid-tile>
+    </mat-grid-list>
+    <mat-grid-list *ngIf="page === 'content'" cols="2" rowHeight="2:2">
+      <mat-grid-tile>3</mat-grid-tile>
+      <mat-grid-tile>4</mat-grid-tile>
+    </mat-grid-list>
+  </form>
 </app-save-dialog-scaffold>

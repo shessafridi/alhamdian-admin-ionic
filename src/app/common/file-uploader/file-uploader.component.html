@@ -1,0 +1,6 @@
+<input #fileInput [multiple]="multiple" [accept]="allowedTypes.length ? allowedTypes.join(',') : '*'" [hidden]="true"
+  type="file">
+
+<div filesDrop matRipple (click)="fileInput.click()">
+  <p>Click to upload file or drop files here</p>
+</div>
