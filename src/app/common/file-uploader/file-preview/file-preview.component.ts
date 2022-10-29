@@ -30,6 +30,8 @@ export class FilePreviewComponent implements OnInit, OnDestroy {
     if (this.file.type.includes('video')) this.type = 'video';
     if (this.file.type.includes('audio')) this.type = 'audio';
 
+    if (this.type === 'other') return;
+
     const readable = ['image', 'audio'];
     const convertableToBlobUrl = ['video'];
 
