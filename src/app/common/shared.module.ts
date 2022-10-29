@@ -3,13 +3,12 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MaterialModule } from '../material.module';
 import { ConfirmDialogService } from '../services/confirm-dialog.service';
-import { FileUploaderComponent } from './file-uploader/file-uploader.component';
-import { FilesDropDirective } from './directives/files-drop.directive';
+import { FileUploaderModule } from './file-uploader/file-uploader.module';
 
 @NgModule({
-  declarations: [ConfirmDialogComponent, FileUploaderComponent, FilesDropDirective],
+  declarations: [ConfirmDialogComponent],
   imports: [CommonModule, MaterialModule],
-  exports: [FileUploaderComponent],
+  exports: [FileUploaderModule],
   providers: [ConfirmDialogService],
 })
 export class SharedModule {}

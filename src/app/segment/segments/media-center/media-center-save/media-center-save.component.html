@@ -1,8 +1,8 @@
 <app-save-dialog-scaffold [title]="data ? 'Update ' : 'Create ' + 'Media Center'" [buttonConfig]="buttonConfig">
-  <form style="height: 100%">
-    <mat-grid-list *ngIf="page === 'details'" cols="2" rowHeight="2:2" [gutterSize]="'30'">
-      <mat-grid-tile>
-        <div class="expand center-y">
+  <div class="dialog-content-wrapper">
+    <form>
+      <div *ngIf="page === 'details'">
+        <div class="expand">
           <mat-form-field appearance="outline">
             <mat-label>Title</mat-label>
             <input matInput>
@@ -12,16 +12,14 @@
             <input matInput type="date">
           </mat-form-field>
         </div>
-      </mat-grid-tile>
-      <mat-grid-tile>
-        <div class="expand center-y">
+        <div class="expand">
           <app-file-uploader [allowedTypes]="['image/png', 'image/jpeg']"></app-file-uploader>
         </div>
-      </mat-grid-tile>
-    </mat-grid-list>
-    <mat-grid-list *ngIf="page === 'content'" cols="2" rowHeight="2:2">
-      <mat-grid-tile>3</mat-grid-tile>
-      <mat-grid-tile>4</mat-grid-tile>
-    </mat-grid-list>
-  </form>
+      </div>
+      <mat-grid-list *ngIf="page === 'content'" cols="2" rowHeight="2:2">
+        <mat-grid-tile>3</mat-grid-tile>
+        <mat-grid-tile>4</mat-grid-tile>
+      </mat-grid-list>
+    </form>
+  </div>
 </app-save-dialog-scaffold>

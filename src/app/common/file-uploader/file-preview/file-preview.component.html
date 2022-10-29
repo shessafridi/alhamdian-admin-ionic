@@ -1,0 +1,37 @@
+<div class="file-preview">
+  <div class="file-preview-controls">
+    <button type="button" mat-raised-button color="warn" (click)="delete.emit()">Remove</button>
+  </div>
+
+  <div class="preview-viewer center-y" *ngIf="reading">
+    <p class="file-preview-status">
+      Loading preview
+    </p>
+  </div>
+  <div class="preview-viewer center-y" *ngIf="!reading && !dataUrl">
+    <p class="file-preview-status">
+      Unable to read file.
+    </p>
+  </div>
+  <div *ngIf="!reading && dataUrl">
+    <div *ngIf="type === 'image'">
+      <img class="preview-viewer" [src]="dataUrl" alt="">
+    </div>
+    <div *ngIf="type === 'video'">
+      <video controls [autoplay]="false" [src]="dataUrl" class="preview-viewer"></video>
+    </div>
+    <div *ngIf="type === 'audio'">
+      <div class="preview-viewer">
+        <audio [src]="dataUrl"></audio>
+      </div>
+    </div>
+    <div *ngIf="type === 'other'">
+      <div class="preview-viewer center-y">
+        <p class="file-preview-status">
+          No preview available for this file.
+        </p>
+      </div>
+    </div>
+  </div>
+
+</div>

@@ -21,6 +21,8 @@ export class AuthService {
 
   isAuthenticated() {
     const token = this.tokenService.getToken();
+    if (!token) return false;
+
     console.log({ token }, 'isAuthenticated');
     return this.tokenService.isTokenValid(token);
   }

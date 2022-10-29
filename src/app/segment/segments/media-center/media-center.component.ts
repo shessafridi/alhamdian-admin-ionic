@@ -138,10 +138,11 @@ export class MediaCenterComponent implements OnInit, OnDestroy {
           console.log({ res }, 'ADD RESPONSE');
         },
         error: (err) => {
+          console.log({ err });
+          if (!this.segment) return;
           this.segment.data = [...this.segment.data].filter(
             (d) => d.id !== newRecord.id
           );
-          console.log({ err });
         },
       });
   }
@@ -163,10 +164,12 @@ export class MediaCenterComponent implements OnInit, OnDestroy {
         console.log({ res }, 'DELETE RESPONSE');
       },
       error: (err) => {
+        console.log({ err });
+
+        if (!this.segment) return;
         const existingData = [...this.segment.data];
         existingData.splice(index, 0, found);
         this.segment.data = existingData;
-        console.log({ err });
       },
     });
   }

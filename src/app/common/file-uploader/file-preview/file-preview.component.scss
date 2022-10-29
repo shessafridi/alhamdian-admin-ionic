@@ -1,0 +1,19 @@
+.preview-viewer {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  aspect-ratio: 4 / 3;
+  background: #161616;
+}
+
+.file-preview-controls {
+  button {
+    width: 100%;
+  }
+}
+
+.file-preview-status {
+  text-align: center;
+  align-self: center;
+  justify-self: center;
+}

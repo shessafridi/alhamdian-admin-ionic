@@ -1,0 +1,40 @@
+.files-list {
+  display: grid;
+  column-gap: 15px;
+  row-gap: 15px;
+  grid-template-columns: repeat(3, 1fr);
+
+  .preview-card {
+    margin-bottom: 10px;
+    position: relative;
+
+    .preview-card-handle {
+      position: absolute;
+      top: 40px;
+      right: 10px;
+      color: #333;
+      background-color: white;
+      border-radius: 50%;
+      cursor: move;
+      width: 24px;
+      height: 24px;
+      opacity: 0.4;
+
+      transition: opacity 200px ease-in-out;
+
+      &:hover {
+        opacity: 0.8;
+      }
+    }
+  }
+
+
+  max-height: 500px;
+  overflow-y: auto;
+
+  @media screen and (max-width: 599.98px) {
+    grid-template-columns: repeat(1, 1fr);
+  }
+
+  padding: 0 15px;
+}

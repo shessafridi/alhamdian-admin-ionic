@@ -31,6 +31,7 @@ export class FilesDropDirective {
     event.stopPropagation();
     this.classList = 'dragzone';
 
+    if (!event.dataTransfer) return;
     const files: FileList = event.dataTransfer.files;
     if (files.length) this.fileDropped.emit(Array.from(files));
   }
