@@ -1,5 +1,9 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
+import {
+  CdkDragDrop,
+  CdkDragEnter,
+  moveItemInArray,
+} from '@angular/cdk/drag-drop';
 
 @Component({
   selector: 'app-file-uploader',
@@ -45,5 +49,9 @@ export class FileUploaderComponent implements OnInit {
 
   orderChanged(event: CdkDragDrop<File[]>) {
     moveItemInArray(this._files, event.previousIndex, event.currentIndex);
+  }
+
+  entered(event: CdkDragEnter) {
+    moveItemInArray(this._files, event.item.data, event.container.data);
   }
 }
