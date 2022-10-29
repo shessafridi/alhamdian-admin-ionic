@@ -33,6 +33,9 @@ export class FileUploaderComponent implements OnInit {
   }
 
   addFiles(files: File[]) {
+    if (!this.multiple && files.length) {
+      this._files = [];
+    }
     const filteredFiles = files.filter((f) => {
       if (this.allowedTypes.length) {
         return this.allowedTypes.some((t) => f.type === t);
@@ -41,9 +44,13 @@ export class FileUploaderComponent implements OnInit {
     });
 
     this._files = [...this._files, ...filteredFiles];
+
+    if (!this.multiple && this._files.length) {
+      this._files = [this._files[this.files.length - 1]];
+    }
   }
 
-  removeImage(index: number) {
+  removeFile(index: number) {
     this._files.splice(index, 1);
   }
 

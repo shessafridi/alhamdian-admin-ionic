@@ -13,7 +13,7 @@
           </mat-form-field>
         </div>
         <div class="expand">
-          <app-file-uploader [allowedTypes]="['image/png', 'image/jpeg']"></app-file-uploader>
+          <app-file-uploader [multiple]="true"></app-file-uploader>
         </div>
       </div>
       <mat-grid-list *ngIf="page === 'content'" cols="2" rowHeight="2:2">

@@ -6,11 +6,12 @@
 </div>
 
 <ng-container *ngIf="!multiple">
-  <app-file-preview *ngIf="files[0] as f" [file]="f"></app-file-preview>
+  <ng-container *ngFor="let f of files; let i = index">
+    <app-file-preview *ngIf="i === 0" (delete)="removeFile(0)" [file]="f"></app-file-preview>
+  </ng-container>
 </ng-container>
 <div *ngIf="multiple" cdkDropListGroup class="files-list">
-  <div cdkDropList [cdkDropListData]="i" class="preview-card" *ngFor="let f of files; let i = index" cdkDrag
-    (delete)="removeImage(i)">
+  <div cdkDropList [cdkDropListData]="i" class="preview-card" *ngFor="let f of files; let i = index" cdkDrag>
 
     <!-- <div class="preview-card-handle" cdkDragHandle>
       <svg width="24px" fill="currentColor" viewBox="0 0 24 24">
@@ -20,7 +21,7 @@
         <path d="M0 0h24v24H0z" fill="none"></path>
       </svg>
     </div> -->
-    <app-file-preview [file]="f" cdkDrag [cdkDragData]="i" (cdkDragEntered)="entered($event)">
+    <app-file-preview [file]="f" (delete)="removeFile(i)" cdkDrag [cdkDragData]="i" (cdkDragEntered)="entered($event)">
     </app-file-preview>
   </div>
 </div>

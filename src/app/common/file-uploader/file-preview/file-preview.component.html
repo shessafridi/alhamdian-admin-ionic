@@ -21,14 +21,19 @@
       <video controls [autoplay]="false" [src]="dataUrl" class="preview-viewer"></video>
     </div>
     <div *ngIf="type === 'audio'">
-      <div class="preview-viewer">
-        <audio [src]="dataUrl"></audio>
+      <div class="preview-viewer center-y" style="padding: 0 15px;">
+        <p class="file-preview-status">
+          {{file.name}}
+        </p>
+        <audio controls [src]="dataUrl" style="width: 100%;"></audio>
       </div>
     </div>
     <div *ngIf="type === 'other'">
       <div class="preview-viewer center-y">
         <p class="file-preview-status">
           No preview available for this file.
+          <br>
+          <span>{{file.type}}</span>
         </p>
       </div>
     </div>
