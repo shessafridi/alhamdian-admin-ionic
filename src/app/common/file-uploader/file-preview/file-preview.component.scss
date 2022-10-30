@@ -7,8 +7,23 @@
 }
 
 .file-preview-controls {
+  position: absolute;
+  right: 6px;
+  top: 6px;
+
   button {
-    width: 100%;
+    height: 30px;
+    width: 30px;
+    border-radius: 100%;
+    padding: 0;
+    background: #f44336;
+    opacity: 0.6;
+
+    transition: opacity 200ms ease-in-out;
+
+    &:hover {
+      opacity: 1;
+    }
   }
 }
 
@@ -16,4 +31,8 @@
   text-align: center;
   align-self: center;
   justify-self: center;
+}
+
+.file-preview {
+  position: relative;
 }

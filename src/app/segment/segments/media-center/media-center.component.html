@@ -20,7 +20,7 @@
           <ng-container matColumnDef="date">
             <th [style]="'min-width: ' + (breakpoint === 'xsm' ? 60 : 120) + 'px;'" mat-header-cell *matHeaderCellDef>
               Date
-              {{breakpoint}}</th>
+            </th>
             <td mat-cell *matCellDef="let element">{{element.date | date}}</td>
           </ng-container>
           <ng-container matColumnDef="actions">

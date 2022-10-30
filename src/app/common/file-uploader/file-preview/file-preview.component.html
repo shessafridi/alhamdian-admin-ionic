@@ -1,6 +1,8 @@
 <div class="file-preview">
   <div class="file-preview-controls">
-    <button type="button" mat-raised-button color="warn" (click)="delete.emit()">Remove</button>
+    <button title="Remove File" matRipple type="button" (click)="delete.emit()">
+      <mat-icon fontIcon="delete"></mat-icon>
+    </button>
   </div>
 
   <div *ngIf="type === 'other'">

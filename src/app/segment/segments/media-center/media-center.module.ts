@@ -14,10 +14,9 @@ import { SegmentCommonModule } from '../../common/segment-common.module';
     CommonModule,
     MaterialModule,
     SharedModule,
-    FormsModule,
-    ReactiveFormsModule,
     SegmentCommonModule,
     IonicModule,
+    FormsModule,
   ],
 })
 export class MediaCenterModule {}

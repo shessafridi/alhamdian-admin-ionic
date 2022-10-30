@@ -1,3 +1,4 @@
+import { Gallery } from './../../../../models/data/segment-media-center';
 import { Component, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 import { MediaCenterSegment } from 'src/app/models/data/segment-media-center';
@@ -9,7 +10,13 @@ import { MediaCenterSegment } from 'src/app/models/data/segment-media-center';
 })
 export class MediaCenterSaveComponent implements OnInit {
   data: MediaCenterSegment | null = null;
+  mediaCenter: MediaCenterSegment = new MediaCenterSegment();
+
   page: 'details' | 'content' = 'details';
+  gallery: Gallery[] = [];
+
+  selectedImage: File | null = null;
+  galleryImages: File[] = [];
 
   buttonConfig = [
     {
@@ -29,7 +36,7 @@ export class MediaCenterSaveComponent implements OnInit {
       onClick: () => this.next(),
       color: 'primary',
       fill: 'solid',
-      disabled: () => false,
+      disabled: () => !this.mediaCenter.title.trim(),
       show: () => this.page === 'details',
     },
     {
@@ -44,7 +51,11 @@ export class MediaCenterSaveComponent implements OnInit {
 
   constructor(private modalCtrl: ModalController) {}
 
-  ngOnInit() {}
+  ngOnInit() {
+    if (this.data) {
+      this.mediaCenter = JSON.parse(JSON.stringify(this.data));
+    }
+  }
 
   next() {
     this.page = 'content';
@@ -59,5 +70,9 @@ export class MediaCenterSaveComponent implements OnInit {
 
   confirm() {
     return this.modalCtrl.dismiss(null, 'cancel');
+  }
+
+  filesChange(obj: any) {
+    console.log('Files Change Test', obj);
   }
 }

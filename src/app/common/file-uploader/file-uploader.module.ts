@@ -5,6 +5,7 @@ import { FilesDropDirective } from '../directives/files-drop.directive';
 import { FileUploaderComponent } from './file-uploader.component';
 import { MaterialModule } from 'src/app/material.module';
 import { DragDropModule } from '@angular/cdk/drag-drop';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -12,7 +13,7 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
     FilePreviewComponent,
     FilesDropDirective,
   ],
-  imports: [CommonModule, MaterialModule, DragDropModule],
+  imports: [CommonModule, MaterialModule, DragDropModule, FormsModule],
   exports: [FileUploaderComponent],
 })
 export class FileUploaderModule {}

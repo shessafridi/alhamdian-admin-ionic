@@ -11,3 +11,11 @@ export interface Gallery {
   imageUrl?: string;
   ytLink?: string;
 }
+
+export class MediaCenterSegment {
+  id: number | string = '';
+  title: string = '';
+  date: string = new Date().toJSON();
+  gallery?: Gallery[] = [];
+  imageUrl?: string = '';
+}

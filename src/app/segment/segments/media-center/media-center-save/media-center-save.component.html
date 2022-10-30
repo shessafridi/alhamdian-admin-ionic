@@ -1,25 +1,53 @@
 <app-save-dialog-scaffold [title]="data ? 'Update ' : 'Create ' + 'Media Center'" [buttonConfig]="buttonConfig">
-  <div class="dialog-content-wrapper">
-    <form>
-      <div *ngIf="page === 'details'">
-        <div class="expand">
+  <div class="dialog-content-wrapper pt-10">
+    <form #mediaForm="ngForm">
+
+      <div *ngIf="page === 'details'" class="split-2">
+        <div class="expand split-col">
+          <ion-text>
+            <h2>Add Details</h2>
+          </ion-text>
           <mat-form-field appearance="outline">
             <mat-label>Title</mat-label>
-            <input matInput>
+            <input matInput name="title" [(ngModel)]="mediaCenter.title" required>
           </mat-form-field>
           <mat-form-field appearance="outline">
             <mat-label>Date</mat-label>
-            <input matInput type="date">
+            <input matInput type="date" name="date" [ngModel]="mediaCenter.date | date:'yyyy-MM-dd'"
+              (ngModelChange)="mediaCenter.date = $event">
           </mat-form-field>
         </div>
-        <div class="expand">
-          <app-file-uploader [multiple]="true"></app-file-uploader>
+        <div class="expand split-col">
+          <ion-text>
+            <h2>Add Cover Image</h2>
+          </ion-text>
+          <app-file-uploader name="coverImage" [multiple]="false" [allowedTypes]="['image/png', 'image/jpeg']" required
+            #cover="ngModel" [ngModel]="selectedImage ? [selectedImage] : []"
+            (ngModelChange)="selectedImage = $event[0] ? $event[0] : null">
+          </app-file-uploader>
         </div>
       </div>
-      <mat-grid-list *ngIf="page === 'content'" cols="2" rowHeight="2:2">
-        <mat-grid-tile>3</mat-grid-tile>
-        <mat-grid-tile>4</mat-grid-tile>
-      </mat-grid-list>
+      <ion-grid *ngIf="page === 'content'">
+        <ion-row>
+          <ion-col class="ion-float-left">
+            <div>
+              <ion-text>
+                <h2>Add Gallery Images</h2>
+              </ion-text>
+              <app-file-uploader name="galleryImages" [multiple]="true" [allowedTypes]="['image/png', 'image/jpeg']"
+                required #galleryImagesInput="ngModel" [(ngModel)]="galleryImages">
+              </app-file-uploader>
+            </div>
+          </ion-col>
+          <ion-col class="ion-float-right">
+            <div>
+              <ion-text>
+                <h2>Add YouTube links (coming soon)</h2>
+              </ion-text>
+            </div>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
     </form>
   </div>
 </app-save-dialog-scaffold>
