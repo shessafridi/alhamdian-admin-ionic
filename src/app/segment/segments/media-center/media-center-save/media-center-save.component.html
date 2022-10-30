@@ -1,6 +1,6 @@
-<app-save-dialog-scaffold [title]="data ? 'Update ' : 'Create ' + 'Media Center'" [buttonConfig]="buttonConfig">
+<app-save-dialog-scaffold [title]="data ? 'Update ' : 'Create ' + 'Media Center'" [buttonConfig]="[]">
   <div class="dialog-content-wrapper pt-10">
-    <form #mediaForm="ngForm">
+    <form #mediaForm="ngForm" (ngSubmit)="save()">
 
       <div *ngIf="page === 'details'" class="split-2">
         <div class="expand split-col">
@@ -27,27 +27,54 @@
           </app-file-uploader>
         </div>
       </div>
-      <ion-grid *ngIf="page === 'content'">
-        <ion-row>
-          <ion-col class="ion-float-left">
-            <div>
+      <div *ngIf="page === 'content'">
+
+        <mat-tab-group [selectedIndex]="data ? 0 : 1">
+          <mat-tab *ngIf="data" label="Manage Content">
+            <div class="px-15">
               <ion-text>
-                <h2>Add Gallery Images</h2>
-              </ion-text>
-              <app-file-uploader name="galleryImages" [multiple]="true" [allowedTypes]="['image/png', 'image/jpeg']"
-                required #galleryImagesInput="ngModel" [(ngModel)]="galleryImages">
-              </app-file-uploader>
-            </div>
-          </ion-col>
-          <ion-col class="ion-float-right">
-            <div>
-              <ion-text>
-                <h2>Add YouTube links (coming soon)</h2>
+                <h2>Manage Content (coming soon)</h2>
               </ion-text>
             </div>
-          </ion-col>
-        </ion-row>
-      </ion-grid>
+          </mat-tab>
+          <mat-tab label="Add Content">
+            <div class="split-2">
+              <div class="expand split-col">
+                <ion-text>
+                  <h2>Add Gallery Images</h2>
+                </ion-text>
+                <app-file-uploader name="galleryImages" [multiple]="true" [allowedTypes]="['image/png', 'image/jpeg']"
+                  required #galleryImagesInput="ngModel" [(ngModel)]="galleryImages">
+                </app-file-uploader>
+              </div>
+              <div class="expand split-col">
+                <ion-text>
+                  <h2>Add YouTube links (coming soon)</h2>
+                </ion-text>
+              </div>
+            </div>
+          </mat-tab>
+        </mat-tab-group>
+      </div>
     </form>
   </div>
+  <ng-container ngProjectAs='[footer]'>
+    <ion-buttons slot="end">
+      <ion-button *ngIf="this.page === 'details'" [size]="'large'" [fill]="'clear'" [color]="'medium'"
+        (click)="cancel()">
+        Cancel
+      </ion-button>
+      <ion-button *ngIf="this.page === 'content'" [size]="'large'" [fill]="'clear'" [color]="''" (click)="back()">
+        Back
+      </ion-button>
+      <ion-button *ngIf="this.page === 'details'" [disabled]="!mediaCenter.title.trim()" [size]="'large'"
+        [fill]="'solid'" [color]="'primary'" (click)="next()">
+        Next
+      </ion-button>
+      <ion-button *ngIf="this.page === 'content'" [disabled]="mediaForm.invalid" [size]="'large'" [fill]="'solid'"
+        [color]="'primary'" (click)="mediaForm.ngSubmit.emit()">
+        Save
+      </ion-button>
+    </ion-buttons>
+  </ng-container>
 </app-save-dialog-scaffold>

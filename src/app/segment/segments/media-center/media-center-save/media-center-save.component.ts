@@ -13,41 +13,9 @@ export class MediaCenterSaveComponent implements OnInit {
   mediaCenter: MediaCenterSegment = new MediaCenterSegment();
 
   page: 'details' | 'content' = 'details';
-  gallery: Gallery[] = [];
 
   selectedImage: File | null = null;
   galleryImages: File[] = [];
-
-  buttonConfig = [
-    {
-      label: 'Cancel',
-      onClick: () => this.cancel(),
-      color: 'medium',
-      fill: 'clear',
-    },
-    {
-      label: 'Back',
-      onClick: () => this.back(),
-      fill: 'clear',
-      show: () => this.page === 'content',
-    },
-    {
-      label: 'Next',
-      onClick: () => this.next(),
-      color: 'primary',
-      fill: 'solid',
-      disabled: () => !this.mediaCenter.title.trim(),
-      show: () => this.page === 'details',
-    },
-    {
-      label: 'Save',
-      onClick: () => this.confirm(),
-      color: 'primary',
-      fill: 'solid',
-      disabled: () => true,
-      show: () => this.page === 'content',
-    },
-  ];
 
   constructor(private modalCtrl: ModalController) {}
 
@@ -68,8 +36,13 @@ export class MediaCenterSaveComponent implements OnInit {
     return this.modalCtrl.dismiss(null, 'cancel');
   }
 
-  confirm() {
-    return this.modalCtrl.dismiss(null, 'cancel');
+  save() {
+    console.log(
+      'Saving',
+      this.mediaCenter,
+      this.selectedImage,
+      this.galleryImages
+    );
   }
 
   filesChange(obj: any) {

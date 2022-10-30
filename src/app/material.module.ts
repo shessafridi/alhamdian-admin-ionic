@@ -11,6 +11,7 @@ import { MatRippleModule } from '@angular/material/core';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatStepperModule } from '@angular/material/stepper';
+import { MatTabsModule } from '@angular/material/tabs';
 
 @NgModule({
   exports: [
@@ -26,6 +27,7 @@ import { MatStepperModule } from '@angular/material/stepper';
     MatDialogModule,
     MatGridListModule,
     MatStepperModule,
+    MatTabsModule,
   ],
 })
 export class MaterialModule {}
