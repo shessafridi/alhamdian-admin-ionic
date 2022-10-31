@@ -8,25 +8,6 @@
   .preview-card {
     margin-bottom: 10px;
     position: relative;
-
-    .preview-card-handle {
-      position: absolute;
-      top: 40px;
-      right: 10px;
-      color: #333;
-      background-color: white;
-      border-radius: 50%;
-      cursor: move;
-      width: 24px;
-      height: 24px;
-      opacity: 0.4;
-
-      transition: opacity 200px ease-in-out;
-
-      &:hover {
-        opacity: 0.8;
-      }
-    }
   }
 
 

@@ -1,0 +1,90 @@
+$xsmall-width: 599.98px;
+$small-width: 768px;
+$meium-width: 960px;
+$large-width: 1280px;
+$xlarge-width: 1920px;
+
+@mixin XSmall {
+  @media (max-width: #{$xsmall-width}) {
+    @content;
+  }
+}
+
+@mixin AboveXSmall {
+  @media (min-width: #{$xsmall-width + 1}) {
+    @content;
+  }
+}
+
+@mixin InSmall {
+  @media (min-width: #{$xsmall-width + 1}) and (max-width: #{$small-width}) {
+    @content;
+  }
+}
+
+@mixin Small {
+  @media (max-width: #{$small-width}) {
+    @content;
+  }
+}
+
+@mixin AboveSmall {
+  @media (min-width: #{$small-width + 1}) {
+    @content;
+  }
+}
+
+@mixin InMedium {
+  @media (min-width: #{$small-width + 1}) and (max-width: #{$meium-width}) {
+    @content;
+  }
+}
+
+@mixin Medium {
+  @media (max-width: #{$meium-width}) {
+    @content;
+  }
+}
+
+@mixin AboveMedium {
+  @media (min-width: #{$meium-width + 1}) {
+    @content;
+  }
+}
+
+
+@mixin InLarge {
+  @media (min-width: #{$meium-width + 1}) and (max-width: #{$large-width}) {
+    @content;
+  }
+}
+
+@mixin Large {
+  @media (max-width: #{$large-width}) {
+    @content;
+  }
+}
+
+@mixin AboveLarge {
+  @media (min-width: #{$large-width + 1}) {
+    @content;
+  }
+}
+
+@mixin InXLarge {
+  @media (min-width: #{$large-width + 1}) and (max-width: #{$xlarge-width}) {
+    @content;
+  }
+}
+
+@mixin XLarge {
+  @media (max-width: #{$xlarge-width}) {
+    @content;
+  }
+}
+
+@mixin AboveXLarge {
+  @media (min-width: #{$xlarge-width + 1}) {
+    @content;
+  }
+}

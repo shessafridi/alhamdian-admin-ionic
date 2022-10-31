@@ -17,7 +17,7 @@ export class MediaCenterSaveComponent implements OnInit {
 
   selectedImage: File | null = null;
   galleryImages: File[] = [];
-  ytLinksToAdd: string[] = [];
+  ytLinksToAdd: { link: string }[] = [];
 
   constructor(private modalCtrl: ModalController) {}
 
@@ -27,7 +27,7 @@ export class MediaCenterSaveComponent implements OnInit {
     }
   }
 
-  removeLink(link: string) {
+  removeLink(link: { link: string }) {
     this.ytLinksToAdd = this.ytLinksToAdd.filter((y) => y !== link);
   }
 

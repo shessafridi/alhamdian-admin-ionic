@@ -8,6 +8,7 @@ import {
 } from '@angular/core';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { finalize, lastValueFrom, Observable, of } from 'rxjs';
+import { readFileAsDataUrl$ } from '../../helpers/fileToDataUrl';
 
 @Component({
   selector: 'app-file-preview',
@@ -43,7 +44,9 @@ export class FilePreviewComponent implements OnInit, OnDestroy {
     if (isReadable) {
       this.reading = true;
       const dataUrl = await lastValueFrom(
-        this.readFile$(this.file).pipe(finalize(() => (this.reading = false)))
+        readFileAsDataUrl$(this.file).pipe(
+          finalize(() => (this.reading = false))
+        )
       );
 
       this.dataUrl = dataUrl;
@@ -51,24 +54,6 @@ export class FilePreviewComponent implements OnInit, OnDestroy {
       const url = URL.createObjectURL(this.file);
       this.dataUrl = this._sanitizer.bypassSecurityTrustResourceUrl(url);
     }
-  }
-
-  private readFile$(file: File): Observable<string | null> {
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    return new Observable<string | null>((observer) => {
-      reader.onload = (): void => {
-        if (typeof reader.result === 'string') {
-          observer.next(reader.result);
-        } else {
-          observer.next(null);
-        }
-        observer.complete();
-      };
-      reader.onerror = (error: any): void => {
-        observer.error(error);
-      };
-    });
   }
 
   ngOnDestroy(): void {

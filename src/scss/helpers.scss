@@ -1,3 +1,5 @@
+@use "partials/breakpoints"as breakPoints;
+
 .expand {
   height: 100%;
   width: 100%;
@@ -31,18 +33,13 @@
     padding: 0 15px;
   }
 
-  @media only screen and (max-width: 768px) {
+  @include breakPoints.Small {
     .split-col {
       flex-basis: 100%;
       padding: 0 15px;
     }
   }
-}
 
-.dialog-content-wrapper {
-  min-height: 100%;
-  width: 100%;
-  overflow-y: auto;
 }
 
 .grid-view {
@@ -52,15 +49,13 @@
   grid-template-columns: repeat(3, 1fr);
 
   &.grid-view-md-2 {
-
-    @media screen and (max-width: 768px) and (min-width: 600px) {
+    @include breakPoints.InSmall {
       grid-template-columns: repeat(2, 1fr);
     }
   }
 
   &.grid-view-sm-1 {
-
-    @media screen and (max-width: 599.98px) {
+    @include breakPoints.XSmall {
       grid-template-columns: repeat(1, 1fr);
     }
   }
@@ -102,4 +97,38 @@
 
 .cursor-move {
   cursor: move;
+}
+
+.drag-handle {
+  position: absolute;
+  top: 6px;
+  left: 6px;
+  color: #333;
+  background-color: white;
+  border-radius: 50%;
+  cursor: move;
+  width: 24px;
+  height: 24px;
+  opacity: 0.4;
+
+  svg {
+    transform: scale(0.8);
+  }
+
+  transition: opacity 200px ease-in-out;
+  z-index: 1;
+
+  &:hover {
+    opacity: 0.8;
+  }
+}
+
+.pos-rel {
+  position: relative;
+}
+
+.mobile-drag-placeholder {
+  @include breakPoints.XSmall {
+    height: 300px;
+  }
 }

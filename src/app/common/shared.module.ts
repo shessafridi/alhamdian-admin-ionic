@@ -5,11 +5,20 @@ import { MaterialModule } from '../material.module';
 import { ConfirmDialogService } from '../services/confirm-dialog.service';
 import { FileUploaderModule } from './file-uploader/file-uploader.module';
 import { YoutubePlayerComponent } from './youtube-player/youtube-player.component';
+import { YoutubeLinkValidatorDirective } from './directives/youtube-link-validator.directive';
 
 @NgModule({
-  declarations: [ConfirmDialogComponent, YoutubePlayerComponent],
+  declarations: [
+    ConfirmDialogComponent,
+    YoutubePlayerComponent,
+    YoutubeLinkValidatorDirective,
+  ],
   imports: [CommonModule, MaterialModule],
-  exports: [FileUploaderModule, YoutubePlayerComponent],
+  exports: [
+    FileUploaderModule,
+    YoutubePlayerComponent,
+    YoutubeLinkValidatorDirective,
+  ],
   providers: [ConfirmDialogService],
 })
 export class SharedModule {}

@@ -41,8 +41,8 @@
             <h2>{{data ? 'Update' : 'Add'}} Cover Image</h2>
           </ion-text>
 
-          <app-file-uploader name="coverImage" [multiple]="false" [allowedTypes]="['image/png', 'image/jpeg']" required
-            #cover="ngModel" [ngModel]="selectedImage ? [selectedImage] : []"
+          <app-file-uploader name="coverImage" [multiple]="false" [allowedTypes]="['image/png', 'image/jpeg']"
+            [required]="!data" #cover="ngModel" [ngModel]="selectedImage ? [selectedImage] : []"
             (ngModelChange)="selectedImage = $event[0] ? $event[0] : null">
           </app-file-uploader>
           <div *ngIf="data && mediaCenter.imageUrl && !selectedImage">
@@ -58,15 +58,23 @@
               <ion-text>
                 <h2>Manage Content</h2>
               </ion-text>
-              <div class="lg-hide grid-view grid-view-sm-1 grid-view-md-2">
+              <!-- <div class="lg-hide grid-view grid-view-sm-1 grid-view-md-2">
                 <div *ngFor="let item of mediaCenter.gallery; let i = index">
                   <ng-container *ngTemplateOutlet="galleryPreview; context: {$implicit: item, i}"></ng-container>
                 </div>
-              </div>
-              <div cdkDropListGroup class="lg-show grid-view grid-view-sm-1 grid-view-md-2">
-                <div *ngFor="let item of mediaCenter.gallery; let i = index" cdkDropList cdkDrag [cdkDropListData]="i">
-                  <div class="cursor-move" cdkDrag [cdkDragData]="i" (cdkDragEntered)="entered($event)">
-                    <div *cdkDragPlaceholder></div>
+              </div> -->
+              <div cdkDropListGroup class="grid-view grid-view-sm-1 grid-view-md-2">
+                <div *ngFor="let item of mediaCenter.gallery; let i = index" cdkDropList [cdkDropListData]="i">
+                  <div class="pos-rel" cdkDrag [cdkDragData]="i" (cdkDragEntered)="entered($event)">
+                    <div class="drag-handle" cdkDragHandle>
+                      <svg width="24px" fill="currentColor" viewBox="0 0 24 24">
+                        <path
+                          d="M10 9h4V6h3l-5-5-5 5h3v3zm-1 1H6V7l-5 5 5 5v-3h3v-4zm14 2l-5-5v3h-3v4h3v3l5-5zm-9 3h-4v3H7l5 5 5-5h-3v-3z">
+                        </path>
+                        <path d="M0 0h24v24H0z" fill="none"></path>
+                      </svg>
+                    </div>
+                    <div class="mobile-drag-placeholder" *cdkDragPlaceholder></div>
                     <ng-container *ngTemplateOutlet="galleryPreview; context: {$implicit: item, i}"></ng-container>
                   </div>
                 </div>
@@ -80,7 +88,7 @@
                   <h2>Add Gallery Images</h2>
                 </ion-text>
                 <app-file-uploader name="galleryImages" [multiple]="true" [allowedTypes]="['image/png', 'image/jpeg']"
-                  required #galleryImagesInput="ngModel" [(ngModel)]="galleryImages">
+                  [required]="!data" #galleryImagesInput="ngModel" [(ngModel)]="galleryImages">
                 </app-file-uploader>
               </div>
               <div class="expand split-col">
@@ -88,21 +96,25 @@
                   <h2>Add YouTube links</h2>
                 </ion-text>
                 <ul class="yt-links-list">
-                  <li *ngFor="let link of ytLinksToAdd">
+                  <li *ngFor="let yt of ytLinksToAdd">
                     <form>
                       <div class="yt-link-group">
                         <mat-form-field appearance="outline">
                           <mat-label>YouTube Link</mat-label>
-                          <input matInput>
+                          <input matInput name="youTubeLink" [(ngModel)]="yt.link" youtubeLinkValidator required
+                            #ytLinkInput="ngModel">
+                          <mat-error *ngIf="ytLinkInput.touched && ytLinkInput.errors">Invalid link will not be saved.
+                          </mat-error>
                         </mat-form-field>
-                        <button type="button" mat-button color="warn" (click)="removeLink(link)">
+
+                        <button type="button" mat-button color="warn" (click)="removeLink(yt)">
                           <mat-icon>delete</mat-icon>
                         </button>
                       </div>
                     </form>
                   </li>
                 </ul>
-                <button type="button" mat-button color="primary" (click)="ytLinksToAdd.push('')">
+                <button type="button" mat-button color="primary" (click)="ytLinksToAdd.push({link: ''})">
                   <mat-icon>video_library</mat-icon> <span style="margin-left: 10px;">Add YouTube Link</span>
                 </button>
               </div>
