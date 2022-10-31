@@ -76,11 +76,11 @@ export class MediaCenterComponent implements OnInit, OnDestroy {
   }
 
   async ngOnInit() {
+    this.loading = true;
     const ctrler = await this.loadingCtrl.create({
       message: 'Fetching data please wait.',
     });
     ctrler.present();
-    this.loading = true;
     this.segmentService
       .getSegment<MediaCenterSegment[]>(Segments.MediaCenter)
       .pipe(takeUntil(this.dispose$))
