@@ -2,3 +2,33 @@ mat-form-field {
   display: block;
   width: 100%;
 }
+
+.mat-tab-body-content {
+  overflow: hidden;
+}
+
+.gallery-preview-controls {
+  position: absolute;
+  right: 6px;
+  top: 6px;
+}
+
+.gallery-preview {
+  position: relative;
+}
+
+.lg-show {
+  @media screen and (max-width: 768px) {
+    display: none;
+  }
+}
+
+.lg-hide {
+  @media screen and (min-width: 768px) {
+    display: none;
+  }
+}
+
+.mat-tab-fix {
+  min-height: 500px;
+}

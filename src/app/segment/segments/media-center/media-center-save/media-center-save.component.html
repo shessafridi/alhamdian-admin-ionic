@@ -1,4 +1,23 @@
-<app-save-dialog-scaffold [title]="data ? 'Update ' : 'Create ' + 'Media Center'" [buttonConfig]="[]">
+<ng-template #galleryPreview let-item let-i="i">
+  <div class="gallery-preview">
+    <div class="gallery-preview-controls">
+      <button class="round-btn-small" title="Remove Gallery Item" matRipple type="button"
+        (click)="removeGalleryItem(i)">
+        <mat-icon fontIcon="delete"></mat-icon>
+      </button>
+    </div>
+    <ng-container *ngIf="item.imageUrl">
+      <img class="fill-img square" [src]="item.imageUrl" alt="">
+    </ng-container>
+    <ng-container *ngIf="item.ytLink">
+      <div class="square center-y">
+        <app-youtube-player [youtubeLink]="item.ytLink"></app-youtube-player>
+      </div>
+    </ng-container>
+  </div>
+</ng-template>
+
+<app-save-dialog-scaffold [title]="(data ? 'Update ' : 'Create ') + 'Media Center'" [buttonConfig]="[]">
   <div class="dialog-content-wrapper pt-10">
     <form #mediaForm="ngForm" (ngSubmit)="save()">
 
@@ -19,26 +38,43 @@
         </div>
         <div class="expand split-col">
           <ion-text>
-            <h2>Add Cover Image</h2>
+            <h2>{{data ? 'Update' : 'Add'}} Cover Image</h2>
           </ion-text>
+
           <app-file-uploader name="coverImage" [multiple]="false" [allowedTypes]="['image/png', 'image/jpeg']" required
             #cover="ngModel" [ngModel]="selectedImage ? [selectedImage] : []"
             (ngModelChange)="selectedImage = $event[0] ? $event[0] : null">
           </app-file-uploader>
+          <div *ngIf="data && mediaCenter.imageUrl && !selectedImage">
+            <img class="preview-img" [src]="mediaCenter.imageUrl" alt="">
+          </div>
         </div>
       </div>
       <div *ngIf="page === 'content'">
 
-        <mat-tab-group [selectedIndex]="data ? 0 : 1">
+        <mat-tab-group dynamicHeight [selectedIndex]="data ? 0 : 1">
           <mat-tab *ngIf="data" label="Manage Content">
             <div class="px-15">
               <ion-text>
-                <h2>Manage Content (coming soon)</h2>
+                <h2>Manage Content</h2>
               </ion-text>
+              <div class="lg-hide grid-view grid-view-sm-1 grid-view-md-2">
+                <div *ngFor="let item of mediaCenter.gallery; let i = index">
+                  <ng-container *ngTemplateOutlet="galleryPreview; context: {$implicit: item, i}"></ng-container>
+                </div>
+              </div>
+              <div cdkDropListGroup class="lg-show grid-view grid-view-sm-1 grid-view-md-2">
+                <div *ngFor="let item of mediaCenter.gallery; let i = index" cdkDropList cdkDrag [cdkDropListData]="i">
+                  <div class="cursor-move" cdkDrag [cdkDragData]="i" (cdkDragEntered)="entered($event)">
+                    <div *cdkDragPlaceholder></div>
+                    <ng-container *ngTemplateOutlet="galleryPreview; context: {$implicit: item, i}"></ng-container>
+                  </div>
+                </div>
+              </div>
             </div>
           </mat-tab>
           <mat-tab label="Add Content">
-            <div class="split-2">
+            <div class="split-2 mat-tab-fix">
               <div class="expand split-col">
                 <ion-text>
                   <h2>Add Gallery Images</h2>

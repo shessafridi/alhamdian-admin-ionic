@@ -2,6 +2,7 @@ import { Gallery } from './../../../../models/data/segment-media-center';
 import { Component, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 import { MediaCenterSegment } from 'src/app/models/data/segment-media-center';
+import { CdkDragEnter, moveItemInArray } from '@angular/cdk/drag-drop';
 
 @Component({
   selector: 'app-media-center-save',
@@ -47,5 +48,19 @@ export class MediaCenterSaveComponent implements OnInit {
 
   filesChange(obj: any) {
     console.log('Files Change Test', obj);
+  }
+
+  entered(event: CdkDragEnter) {
+    if (!this.mediaCenter.gallery) return;
+    moveItemInArray(
+      this.mediaCenter.gallery,
+      event.item.data,
+      event.container.data
+    );
+  }
+
+  removeGalleryItem(i: number) {
+    if (!this.mediaCenter.gallery) return;
+    this.mediaCenter.gallery.splice(i, 1);
   }
 }

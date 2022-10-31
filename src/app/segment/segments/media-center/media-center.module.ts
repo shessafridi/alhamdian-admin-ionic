@@ -1,3 +1,4 @@
+import { CdkModule } from './../../../cdk.module';
 import { IonicModule } from '@ionic/angular';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -13,6 +14,7 @@ import { SegmentCommonModule } from '../../common/segment-common.module';
   imports: [
     CommonModule,
     MaterialModule,
+    CdkModule,
     SharedModule,
     SegmentCommonModule,
     IonicModule,

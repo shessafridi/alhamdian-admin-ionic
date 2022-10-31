@@ -99,9 +99,9 @@ export class MediaCenterComponent implements OnInit, OnDestroy {
       });
   }
 
-  async getSaveData<T>(
+  async getSaveData(
     modalData: MediaCenterSegment | null
-  ): Promise<T | null> {
+  ): Promise<MediaCenterSegment | null> {
     const modal = await this.modalController.create({
       component: MediaCenterSaveComponent,
       componentProps: {
@@ -145,6 +145,11 @@ export class MediaCenterComponent implements OnInit, OnDestroy {
           );
         },
       });
+  }
+
+  async onEdit(mediaCenter: MediaCenterSegment) {
+    const updated = await this.getSaveData(mediaCenter);
+    console.log(updated);
   }
 
   async onDelete(id: number) {

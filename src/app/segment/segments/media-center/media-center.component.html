@@ -26,7 +26,7 @@
           <ng-container matColumnDef="actions">
             <th mat-header-cell *matHeaderCellDef>Actions</th>
             <td [style]="'min-width: ' + (breakpoint === 'xsm' ? 10 : 120) + 'px;'" mat-cell *matCellDef="let element">
-              <button color="primary" mat-icon-button>
+              <button (click)="onEdit(element)" color="primary" mat-icon-button>
                 <mat-icon>edit</mat-icon>
               </button>
               <button (click)="onDelete(element.id)" color="warn" mat-icon-button>

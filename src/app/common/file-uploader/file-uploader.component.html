@@ -15,9 +15,11 @@
   <div *ngIf="multiple" cdkDropListGroup class="files-list">
     <div cdkDropList [cdkDropListData]="i" class="preview-card cursor-move" *ngFor="let f of files; let i = index"
       cdkDrag>
-      <app-file-preview [file]="f" (delete)="removeFile(i)" cdkDrag [cdkDragData]="i"
-        (cdkDragEntered)="entered($event)">
-      </app-file-preview>
+      <div cdkDrag [cdkDragData]="i" (cdkDragEntered)="entered($event)">
+        <div *cdkDragPlaceholder></div>
+        <app-file-preview [file]="f" (delete)="removeFile(i)">
+        </app-file-preview>
+      </div>
     </div>
   </div>
 </div>
