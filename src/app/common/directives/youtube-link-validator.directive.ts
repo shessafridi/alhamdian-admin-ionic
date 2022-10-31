@@ -22,7 +22,7 @@ export class YoutubeLinkValidatorDirective implements Validator {
   constructor() {}
 
   validate(control: FormControl): ValidationErrors | null {
-    if (control.value.trim()) {
+    if (control.value?.trim()) {
       const id = getVideoId(control.value);
       if (!id) {
         return {

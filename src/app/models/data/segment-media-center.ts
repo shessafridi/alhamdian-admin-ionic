@@ -7,7 +7,7 @@ export interface MediaCenterSegment {
 }
 
 export interface Gallery {
-  id: number;
+  id: number | string;
   imageUrl?: string;
   ytLink?: string;
 }

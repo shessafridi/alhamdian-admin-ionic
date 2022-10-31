@@ -108,6 +108,7 @@ export class MediaCenterComponent implements OnInit, OnDestroy {
         data: modalData ? JSON.parse(JSON.stringify(modalData)) : null,
       },
       cssClass: 'save-modal',
+      backdropDismiss: false,
     });
 
     modal.present();
@@ -119,15 +120,9 @@ export class MediaCenterComponent implements OnInit, OnDestroy {
 
   async addNew() {
     if (!this.segment) return;
-    const newRecord2 = await this.getSaveData(null);
+    const newRecord = await this.getSaveData(null);
+    if (!newRecord) return;
 
-    const newRecord: MediaCenterSegment = {
-      id: v4(),
-      date: new Date().toJSON(),
-      title: 'Test',
-      gallery: [],
-      imageUrl: '',
-    };
     const segmentData = this.segment.data;
     this.segment.data = [...segmentData, newRecord];
 
@@ -148,8 +143,28 @@ export class MediaCenterComponent implements OnInit, OnDestroy {
   }
 
   async onEdit(mediaCenter: MediaCenterSegment) {
+    if (!this.segment) return;
+
     const updated = await this.getSaveData(mediaCenter);
-    console.log(updated);
+    if (!updated) return;
+    const data = [...this.segment.data];
+    const found = data.find((d) => d.id === mediaCenter.id);
+    if (!found) return;
+    const index = data.indexOf(found);
+    data.splice(index, 1, updated);
+
+    this.segment.data = [...data];
+    this.segmentService
+      .updateRecord(Segments.MediaCenter, mediaCenter.id, updated)
+      .subscribe({
+        next: (res) => {},
+        error: (err) => {
+          if (!this.segment) return;
+          const existingData = [...this.segment.data];
+          existingData.splice(index, 1, found);
+          this.segment.data = existingData;
+        },
+      });
   }
 
   async onDelete(id: number) {

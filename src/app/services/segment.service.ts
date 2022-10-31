@@ -21,6 +21,7 @@ import {
 } from 'rxjs';
 import { Segment, Segments } from '../models/data/segment';
 import { MappedSegment } from '../models/data/mapped-segment';
+import { v4 } from 'uuid';
 
 interface CreateAction<T> {
   type: 'create';
@@ -98,13 +99,16 @@ export class SegmentService {
       switchMap((segment) => {
         console.log({ action, segment });
         if (action.type === 'create') {
+          action.record.id = v4();
           segment.data = [...segment.data, action.record];
         } else if (action.type === 'delete') {
           segment.data = segment.data.filter((s) => s.id !== action.recordId);
         } else if (action.type === 'updateRecord') {
           const index = segment.data.findIndex((s) => s.id === action.recordId);
           if (index !== -1) {
-            segment.data = [...segment.data].splice(index, 1, action.record);
+            const temp = [...segment.data];
+            temp.splice(index, 1, action.record);
+            segment.data = [...temp];
           }
         }
 

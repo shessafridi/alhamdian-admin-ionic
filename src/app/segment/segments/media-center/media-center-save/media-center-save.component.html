@@ -20,7 +20,9 @@
 <app-save-dialog-scaffold [title]="(data ? 'Update ' : 'Create ') + 'Media Center'" [buttonConfig]="[]">
   <div class="dialog-content-wrapper pt-10">
     <form #mediaForm="ngForm" (ngSubmit)="save()">
-
+      <mat-progress-bar *ngIf="uploadingStatus.started"
+        [mode]="(uploadingStatus.percentage && uploadingStatus.percentage !== 100) ? 'determinate' : 'indeterminate'"
+        [value]="uploadingStatus.percentage"></mat-progress-bar>
       <div *ngIf="page === 'details'" class="split-2">
         <div class="expand split-col">
           <ion-text>
@@ -58,11 +60,6 @@
               <ion-text>
                 <h2>Manage Content</h2>
               </ion-text>
-              <!-- <div class="lg-hide grid-view grid-view-sm-1 grid-view-md-2">
-                <div *ngFor="let item of mediaCenter.gallery; let i = index">
-                  <ng-container *ngTemplateOutlet="galleryPreview; context: {$implicit: item, i}"></ng-container>
-                </div>
-              </div> -->
               <div cdkDropListGroup class="grid-view grid-view-sm-1 grid-view-md-2">
                 <div *ngFor="let item of mediaCenter.gallery; let i = index" cdkDropList [cdkDropListData]="i">
                   <div class="pos-rel" cdkDrag [cdkDragData]="i" (cdkDragEntered)="entered($event)">
@@ -126,20 +123,20 @@
   </div>
   <ng-container ngProjectAs='[footer]'>
     <ion-buttons slot="end">
-      <ion-button *ngIf="this.page === 'details'" [size]="'large'" [fill]="'clear'" [color]="'medium'"
-        (click)="cancel()">
+      <ion-button *ngIf="this.page === 'details'" [disabled]="uploadingStatus.started" [size]="'large'" [fill]="'clear'"
+        [color]="'medium'" (click)="cancel()">
         Cancel
       </ion-button>
-      <ion-button *ngIf="this.page === 'content'" [size]="'large'" [fill]="'clear'" [color]="''"
-        (click)="page = 'details'">
+      <ion-button *ngIf="this.page === 'content'" [disabled]="uploadingStatus.started" [size]="'large'" [fill]="'clear'"
+        [color]="''" (click)="page = 'details'">
         Back
       </ion-button>
-      <ion-button *ngIf="this.page === 'details'" [disabled]="!mediaCenter.title.trim()" [size]="'large'"
-        [fill]="'solid'" [color]="'primary'" (click)="page = 'content'">
+      <ion-button *ngIf="this.page === 'details'" [disabled]="!mediaCenter.title.trim()  || uploadingStatus.started"
+        [size]="'large'" [fill]="'solid'" [color]="'primary'" (click)="page = 'content'">
         Next
       </ion-button>
-      <ion-button *ngIf="this.page === 'content'" [disabled]="mediaForm.invalid" [size]="'large'" [fill]="'solid'"
-        [color]="'primary'" (click)="mediaForm.ngSubmit.emit()">
+      <ion-button *ngIf="this.page === 'content'" [disabled]="mediaForm.invalid || uploadingStatus.started"
+        [size]="'large'" [fill]="'solid'" [color]="'primary'" (click)="mediaForm.ngSubmit.emit()">
         Save
       </ion-button>
     </ion-buttons>
