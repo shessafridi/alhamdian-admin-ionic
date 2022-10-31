@@ -1,3 +1,6 @@
-<div class="square center-y">
-  YouTube Player coming soon: {{youtubeLink}}
+<div *ngIf="!embedLink" class="center-y">
+  Failed to parse video link.
 </div>
+<iframe *ngIf="embedLink" class='' title='YouTube Player' width='560' style="width: 100%; height: 100%;"
+  [src]="embedLink" allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture'
+  [frameBorder]="0" allowfullscreen></iframe>

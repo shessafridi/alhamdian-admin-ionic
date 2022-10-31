@@ -85,8 +85,26 @@
               </div>
               <div class="expand split-col">
                 <ion-text>
-                  <h2>Add YouTube links (coming soon)</h2>
+                  <h2>Add YouTube links</h2>
                 </ion-text>
+                <ul class="yt-links-list">
+                  <li *ngFor="let link of ytLinksToAdd">
+                    <form>
+                      <div class="yt-link-group">
+                        <mat-form-field appearance="outline">
+                          <mat-label>YouTube Link</mat-label>
+                          <input matInput>
+                        </mat-form-field>
+                        <button type="button" mat-button color="warn" (click)="removeLink(link)">
+                          <mat-icon>delete</mat-icon>
+                        </button>
+                      </div>
+                    </form>
+                  </li>
+                </ul>
+                <button type="button" mat-button color="primary" (click)="ytLinksToAdd.push('')">
+                  <mat-icon>video_library</mat-icon> <span style="margin-left: 10px;">Add YouTube Link</span>
+                </button>
               </div>
             </div>
           </mat-tab>
@@ -100,11 +118,12 @@
         (click)="cancel()">
         Cancel
       </ion-button>
-      <ion-button *ngIf="this.page === 'content'" [size]="'large'" [fill]="'clear'" [color]="''" (click)="back()">
+      <ion-button *ngIf="this.page === 'content'" [size]="'large'" [fill]="'clear'" [color]="''"
+        (click)="page = 'details'">
         Back
       </ion-button>
       <ion-button *ngIf="this.page === 'details'" [disabled]="!mediaCenter.title.trim()" [size]="'large'"
-        [fill]="'solid'" [color]="'primary'" (click)="next()">
+        [fill]="'solid'" [color]="'primary'" (click)="page = 'content'">
         Next
       </ion-button>
       <ion-button *ngIf="this.page === 'content'" [disabled]="mediaForm.invalid" [size]="'large'" [fill]="'solid'"
