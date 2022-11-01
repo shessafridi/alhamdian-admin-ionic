@@ -54,7 +54,7 @@
       </div>
       <div *ngIf="page === 'content'">
 
-        <mat-tab-group dynamicHeight [selectedIndex]="data ? 0 : 1">
+        <mat-tab-group preserveContent dynamicHeight [selectedIndex]="data ? 0 : 1">
           <mat-tab *ngIf="data" label="Manage Content">
             <div class="px-15">
               <ion-text>
