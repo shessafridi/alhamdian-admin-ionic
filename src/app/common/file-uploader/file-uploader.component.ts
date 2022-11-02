@@ -21,19 +21,17 @@ const CUSTOM_INPUT_CONTROL_VALUE_ACCESSOR = {
 export class FileUploaderComponent implements OnInit, ControlValueAccessor {
   @Input() allowedTypes: string[] = [];
   @Input() multiple = true;
-  private _files: File[] = [];
-
-  get files() {
-    return this._files;
-  }
-
-  private onChangeCallback: (_: any) => void = (_: any) => {};
-  private onTouchedCallback: () => void = () => {};
 
   touched = false;
   disabled = false;
 
+  private _files: File[] = [];
+
   constructor() {}
+
+  get files() {
+    return this._files;
+  }
 
   writeValue(obj: File[]): void {
     this.setFiles(obj);
@@ -116,4 +114,7 @@ export class FileUploaderComponent implements OnInit, ControlValueAccessor {
       this.onChangeCallback(this._files);
     }
   }
+
+  private onChangeCallback: (_: any) => void = (_: any) => {};
+  private onTouchedCallback: () => void = () => {};
 }

@@ -26,7 +26,7 @@ export interface Upload<T> {
   state: 'PENDING' | 'IN_PROGRESS' | 'DONE';
 }
 
-export function upload<T>(): (
+export function uploadProgress<T>(): (
   source: Observable<HttpEvent<unknown>>
 ) => Observable<Upload<T>> {
   const initialState: Upload<T> = {

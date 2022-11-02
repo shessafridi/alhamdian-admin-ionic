@@ -9,8 +9,8 @@ describe('YoutubePlayerComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ YoutubePlayerComponent ],
-      imports: [IonicModule.forRoot()]
+      declarations: [YoutubePlayerComponent],
+      imports: [IonicModule.forRoot()],
     }).compileComponents();
 
     fixture = TestBed.createComponent(YoutubePlayerComponent);

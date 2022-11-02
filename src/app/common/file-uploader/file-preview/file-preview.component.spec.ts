@@ -9,8 +9,8 @@ describe('FilePreviewComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ FilePreviewComponent ],
-      imports: [IonicModule.forRoot()]
+      declarations: [FilePreviewComponent],
+      imports: [IonicModule.forRoot()],
     }).compileComponents();
 
     fixture = TestBed.createComponent(FilePreviewComponent);

@@ -9,8 +9,8 @@ describe('ConfirmDialogComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ ConfirmDialogComponent ],
-      imports: [IonicModule.forRoot()]
+      declarations: [ConfirmDialogComponent],
+      imports: [IonicModule.forRoot()],
     }).compileComponents();
 
     fixture = TestBed.createComponent(ConfirmDialogComponent);

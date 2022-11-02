@@ -59,11 +59,6 @@ export class SegmentService {
     error: any;
   }>();
 
-  private startLoading = () => {
-    if (this.busy || this.dataLoaded) return;
-    this.loadAll();
-  };
-
   constructor(private httpClient: HttpClient) {
     this.opQueue$
       .pipe(
@@ -91,6 +86,83 @@ export class SegmentService {
         this.subject.next(results);
       });
   }
+
+  getAllSegmentsOnce() {
+    return this.getAllSegments().pipe(take(1));
+  }
+
+  getSegmentOnce<T>(segment: Segments) {
+    return this.getSegment<T>(segment).pipe(take(1));
+  }
+
+  getAllSegments() {
+    return this.subject.asObservable().pipe(
+      tap(this.startLoading),
+      filter(() => this.dataLoaded),
+      map((data) => [...data])
+    );
+  }
+
+  getSegment<T>(segmentName: Segments) {
+    return this.getAllSegments().pipe(
+      map((ss) => ss.find((s) => s.Title === segmentName)!),
+      map((segment) => {
+        const mapped: MappedSegment<T> = {
+          segmentId: segment.SegmentID,
+          title: segment.Title,
+          data: JSON.parse(segment.Details),
+        };
+        return mapped;
+      })
+    );
+  }
+
+  addRecord<T>(segmentName: Segments, record: T) {
+    return this.runAction({
+      type: 'create',
+      record,
+      segmentName,
+    });
+  }
+
+  deleteRecord(segmentName: Segments, recordId: string | number) {
+    return this.runAction({
+      type: 'delete',
+      recordId,
+      segmentName,
+    });
+  }
+
+  updateRecord<T>(
+    segmentName: Segments,
+    recordId: string | number,
+    newRecord: T
+  ) {
+    return this.runAction({
+      type: 'updateRecord',
+      recordId,
+      record: newRecord,
+      segmentName,
+    });
+  }
+
+  private loadAll() {
+    if (this.busy) return;
+
+    this.busy = true;
+
+    this.httpClient
+      .get<Segment[]>(environment.apiUrl + '/SegmentDetail')
+      .pipe(finalize(() => (this.busy = false)))
+      .subscribe((templates) => {
+        this.dataLoaded = true;
+        this.subject.next(templates);
+      });
+  }
+  private startLoading = () => {
+    if (this.busy || this.dataLoaded) return;
+    this.loadAll();
+  };
 
   private performAction(action: OpQueueAction) {
     return this.getSegmentOnce<{ id: string | number }[]>(
@@ -167,78 +239,5 @@ export class SegmentService {
       this.opQueue$.next(op);
       return race(done$, error$);
     });
-  }
-
-  getAllSegmentsOnce() {
-    return this.getAllSegments().pipe(take(1));
-  }
-
-  getSegmentOnce<T>(segment: Segments) {
-    return this.getSegment<T>(segment).pipe(take(1));
-  }
-
-  getAllSegments() {
-    return this.subject.asObservable().pipe(
-      tap(this.startLoading),
-      filter(() => this.dataLoaded),
-      map((data) => [...data])
-    );
-  }
-
-  getSegment<T>(segment: Segments) {
-    return this.getAllSegments().pipe(
-      map((d) => d.find((d) => d.Title === segment)!),
-      map((segment) => {
-        const mapped: MappedSegment<T> = {
-          segmentId: segment.SegmentID,
-          title: segment.Title,
-          data: JSON.parse(segment.Details),
-        };
-        return mapped;
-      })
-    );
-  }
-
-  addRecord<T>(segmentName: Segments, record: T) {
-    return this.runAction({
-      type: 'create',
-      record,
-      segmentName,
-    });
-  }
-
-  deleteRecord(segmentName: Segments, recordId: string | number) {
-    return this.runAction({
-      type: 'delete',
-      recordId,
-      segmentName,
-    });
-  }
-
-  updateRecord<T>(
-    segmentName: Segments,
-    recordId: string | number,
-    newRecord: T
-  ) {
-    return this.runAction({
-      type: 'updateRecord',
-      recordId,
-      record: newRecord,
-      segmentName,
-    });
-  }
-
-  private loadAll() {
-    if (this.busy) return;
-
-    this.busy = true;
-
-    this.httpClient
-      .get<Segment[]>(environment.apiUrl + '/SegmentDetail')
-      .pipe(finalize(() => (this.busy = false)))
-      .subscribe((templates) => {
-        this.dataLoaded = true;
-        this.subject.next(templates);
-      });
   }
 }

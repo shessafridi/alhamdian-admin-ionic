@@ -31,6 +31,7 @@ export class AuthService {
     return this.httpClient
       .post<ApiResponse<LoginUser>>(environment.apiUrl + '/login', login, {
         headers: {
+          // eslint-disable-next-line @typescript-eslint/naming-convention
           'Content-Type': 'application/json',
         },
       })

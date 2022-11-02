@@ -9,8 +9,8 @@ describe('NavbarWrapperComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ NavbarWrapperComponent ],
-      imports: [IonicModule.forRoot()]
+      declarations: [NavbarWrapperComponent],
+      imports: [IonicModule.forRoot()],
     }).compileComponents();
 
     fixture = TestBed.createComponent(NavbarWrapperComponent);

@@ -10,9 +10,10 @@ import {
   selector: '[filesDrop]',
 })
 export class FilesDropDirective {
-  constructor() {}
   @Output() fileDropped = new EventEmitter<File[]>();
   @HostBinding('class') private classList = 'dragzone';
+
+  constructor() {}
 
   @HostListener('dragover', ['$event']) dragOver(event: any) {
     event.preventDefault();

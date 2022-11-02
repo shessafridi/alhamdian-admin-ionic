@@ -6,7 +6,7 @@ import { Component, Input, OnInit, Output } from '@angular/core';
   styleUrls: ['./save-dialog-scaffold.component.scss'],
 })
 export class SaveDialogScaffoldComponent implements OnInit {
-  @Input() title: string = '';
+  @Input() title = '';
 
   @Input() buttonConfig: {
     label: string;

@@ -7,8 +7,8 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
   styleUrls: ['./confirm-dialog.component.scss'],
 })
 export class ConfirmDialogComponent implements OnInit {
-  title: string = 'Delete Record';
-  message: string = 'Are you sure ?';
+  title = 'Delete Record';
+  message = 'Are you sure ?';
 
   constructor(
     public dialogRef: MatDialogRef<ConfirmDialogComponent>,

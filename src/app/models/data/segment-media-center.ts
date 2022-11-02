@@ -14,7 +14,7 @@ export interface Gallery {
 
 export class MediaCenterSegment {
   id: number | string = '';
-  title: string = '';
+  title = '';
   date: string = new Date().toJSON();
   gallery?: Gallery[] = [];
   imageUrl?: string = '';

@@ -16,6 +16,10 @@ import { MediaCenterSaveComponent } from './media-center-save/media-center-save.
   styleUrls: ['./media-center.component.scss'],
 })
 export class MediaCenterComponent implements OnInit, OnDestroy {
+  displayedColumns: string[] = [];
+  loading = false;
+  segment: MappedSegment<MediaCenterSegment[]> | null = null;
+
   private availableColumns = [
     {
       name: 'id',
@@ -33,10 +37,6 @@ export class MediaCenterComponent implements OnInit, OnDestroy {
     },
   ];
 
-  displayedColumns: string[] = [];
-  loading = false;
-  segment: MappedSegment<MediaCenterSegment[]> | null = null;
-
   private dispose$ = new Subject<void>();
 
   constructor(
@@ -52,27 +52,6 @@ export class MediaCenterComponent implements OnInit, OnDestroy {
       .subscribe((breakpoints) => {
         this.calculateVisableColumns(breakpoints);
       });
-  }
-
-  private calculateVisableColumns(breakpoints: {
-    xsm: boolean;
-    sm: boolean;
-    md: boolean;
-    lg: boolean;
-    xlg: boolean;
-  }) {
-    let temp = [...this.availableColumns];
-    if (breakpoints.xsm)
-      temp = temp.filter((d) => !d.hideOn || !d.hideOn.includes('xsm'));
-    if (breakpoints.sm)
-      temp = temp.filter((d) => !d.hideOn || !d.hideOn.includes('sm'));
-    if (breakpoints.md)
-      temp = temp.filter((d) => !d.hideOn || !d.hideOn.includes('md'));
-    if (breakpoints.lg)
-      temp = temp.filter((d) => !d.hideOn || !d.hideOn.includes('lg'));
-    if (breakpoints.xlg)
-      temp = temp.filter((d) => !d.hideOn || !d.hideOn.includes('xlg'));
-    this.displayedColumns = temp.map((t) => t.name);
   }
 
   async ngOnInit() {
@@ -197,5 +176,26 @@ export class MediaCenterComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.dispose$.next();
     this.dispose$.complete();
+  }
+
+  private calculateVisableColumns(breakpoints: {
+    xsm: boolean;
+    sm: boolean;
+    md: boolean;
+    lg: boolean;
+    xlg: boolean;
+  }) {
+    let temp = [...this.availableColumns];
+    if (breakpoints.xsm)
+      temp = temp.filter((d) => !d.hideOn || !d.hideOn.includes('xsm'));
+    if (breakpoints.sm)
+      temp = temp.filter((d) => !d.hideOn || !d.hideOn.includes('sm'));
+    if (breakpoints.md)
+      temp = temp.filter((d) => !d.hideOn || !d.hideOn.includes('md'));
+    if (breakpoints.lg)
+      temp = temp.filter((d) => !d.hideOn || !d.hideOn.includes('lg'));
+    if (breakpoints.xlg)
+      temp = temp.filter((d) => !d.hideOn || !d.hideOn.includes('xlg'));
+    this.displayedColumns = temp.map((t) => t.name);
   }
 }

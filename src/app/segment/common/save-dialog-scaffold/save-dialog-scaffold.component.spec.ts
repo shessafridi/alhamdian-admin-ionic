@@ -9,8 +9,8 @@ describe('SaveDialogScaffoldComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ SaveDialogScaffoldComponent ],
-      imports: [IonicModule.forRoot()]
+      declarations: [SaveDialogScaffoldComponent],
+      imports: [IonicModule.forRoot()],
     }).compileComponents();
 
     fixture = TestBed.createComponent(SaveDialogScaffoldComponent);

@@ -9,8 +9,8 @@ describe('SegmentPage', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ SegmentPage ],
-      imports: [IonicModule.forRoot()]
+      declarations: [SegmentPage],
+      imports: [IonicModule.forRoot()],
     }).compileComponents();
 
     fixture = TestBed.createComponent(SegmentPage);

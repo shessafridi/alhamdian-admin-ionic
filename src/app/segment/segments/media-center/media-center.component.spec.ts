@@ -9,8 +9,8 @@ describe('MediaCenterComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ MediaCenterComponent ],
-      imports: [IonicModule.forRoot()]
+      declarations: [MediaCenterComponent],
+      imports: [IonicModule.forRoot()],
     }).compileComponents();
 
     fixture = TestBed.createComponent(MediaCenterComponent);

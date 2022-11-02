@@ -9,8 +9,8 @@ describe('MediaCenterSaveComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ MediaCenterSaveComponent ],
-      imports: [IonicModule.forRoot()]
+      declarations: [MediaCenterSaveComponent],
+      imports: [IonicModule.forRoot()],
     }).compileComponents();
 
     fixture = TestBed.createComponent(MediaCenterSaveComponent);

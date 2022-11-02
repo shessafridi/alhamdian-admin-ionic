@@ -16,6 +16,13 @@ export class ViewportService {
     console.log(Breakpoints);
   }
 
+  getCurrentBreakpoint(): Observable<'xsm' | 'sm' | 'md' | 'lg' | 'xlg'> {
+    return this.observe$.pipe(
+      map((vals) => Object.entries(vals).find(([key, value]) => value)!),
+      map(([key, value]) => key as any)
+    );
+  }
+
   private getObserve$() {
     const xsm$ = this.getMatch(Breakpoints.XSmall);
     const sm$ = this.getMatch(Breakpoints.Small);
@@ -23,22 +30,13 @@ export class ViewportService {
     const lg$ = this.getMatch(Breakpoints.Large);
     const xlg$ = this.getMatch(Breakpoints.XLarge);
     return combineLatest([xsm$, sm$, md$, lg$, xlg$]).pipe(
-      map(([xsm, sm, md, lg, xlg]) => {
-        return {
-          xsm,
-          sm,
-          md,
-          lg,
-          xlg,
-        };
-      })
-    );
-  }
-
-  getCurrentBreakpoint(): Observable<'xsm' | 'sm' | 'md' | 'lg' | 'xlg'> {
-    return this.observe$.pipe(
-      map((vals) => Object.entries(vals).find(([key, value]) => value)!),
-      map(([key, value]) => key as any)
+      map(([xsm, sm, md, lg, xlg]) => ({
+        xsm,
+        sm,
+        md,
+        lg,
+        xlg,
+      }))
     );
   }
 
