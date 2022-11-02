@@ -2,7 +2,20 @@ import { ViewportService } from './../../../services/viewport.service';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { LoadingController, ModalController } from '@ionic/angular';
-import { finalize, lastValueFrom, Subject, takeUntil } from 'rxjs';
+import {
+  map,
+  Subject,
+  takeUntil,
+  combineLatest,
+  catchError,
+  from,
+  switchMap,
+  tap,
+  startWith,
+  delay,
+  of,
+  Observable,
+} from 'rxjs';
 import { MappedSegment } from 'src/app/models/data/mapped-segment';
 import { Segments } from 'src/app/models/data/segment';
 import { MediaCenterSegment } from 'src/app/models/data/segment-media-center';
@@ -10,6 +23,7 @@ import { ConfirmDialogService } from 'src/app/services/confirm-dialog.service';
 import { SegmentService } from 'src/app/services/segment.service';
 import { v4 } from 'uuid';
 import { MediaCenterSaveComponent } from './media-center-save/media-center-save.component';
+import { calculateVisableColumns } from 'src/app/common/helpers/calculateColumns';
 @Component({
   selector: 'app-media-center',
   templateUrl: './media-center.component.html',
@@ -17,8 +31,50 @@ import { MediaCenterSaveComponent } from './media-center-save/media-center-save.
 })
 export class MediaCenterComponent implements OnInit, OnDestroy {
   displayedColumns: string[] = [];
-  loading = false;
-  segment: MappedSegment<MediaCenterSegment[]> | null = null;
+  // loading = false;
+  // segment: MappedSegment<MediaCenterSegment[]> | null = null;
+
+  visableColumns$ = this.viewportService.observe$.pipe(
+    map((b) => calculateVisableColumns(b, this.availableColumns))
+  );
+  currentBreakpoint$ = this.viewportService.getCurrentBreakpoint();
+  segment$: Observable<{
+    loading: boolean;
+    data: MappedSegment<MediaCenterSegment[]> | null;
+    err?: any;
+  }> = from(
+    this.loadingCtrl.create({
+      message: 'Fetching data please wait.',
+    })
+  ).pipe(
+    switchMap((ctrl) => {
+      ctrl.present();
+      return this.segmentService
+        .getSegment<MediaCenterSegment[]>(Segments.MediaCenter)
+        .pipe(
+          delay(10000),
+          map((data) => ({
+            loading: false,
+            data,
+          })),
+          tap((data) => {
+            if (!data.loading) ctrl.remove();
+          }),
+          catchError((err) => {
+            ctrl.remove();
+            console.log(err, 'Error while loading');
+            return of({ loading: false, data: null, err });
+          }),
+          startWith({ loading: true, data: null })
+        );
+    })
+  );
+
+  view$ = combineLatest({
+    currentBreakpoint: this.currentBreakpoint$,
+    visableColumns: this.visableColumns$,
+    segment: this.segment$,
+  });
 
   private availableColumns = [
     {
@@ -43,39 +99,32 @@ export class MediaCenterComponent implements OnInit, OnDestroy {
     private segmentService: SegmentService,
     private loadingCtrl: LoadingController,
     private confirmDialogService: ConfirmDialogService,
-    private dialog: MatDialog,
-    public readonly viewportService: ViewportService,
+    private viewportService: ViewportService,
     private modalController: ModalController
-  ) {
-    this.viewportService.observe$
-      .pipe(takeUntil(this.dispose$))
-      .subscribe((breakpoints) => {
-        this.calculateVisableColumns(breakpoints);
-      });
-  }
+  ) {}
 
   async ngOnInit() {
-    this.loading = true;
-    const ctrler = await this.loadingCtrl.create({
-      message: 'Fetching data please wait.',
-    });
-    ctrler.present();
-    this.segmentService
-      .getSegment<MediaCenterSegment[]>(Segments.MediaCenter)
-      .pipe(takeUntil(this.dispose$))
-      .subscribe({
-        next: (mediaCenter) => {
-          this.loading = false;
-          ctrler.remove();
-          console.log({ mediaCenter });
-          this.segment = mediaCenter;
-        },
-        error: (err) => {
-          console.error(err);
-          this.loading = false;
-          ctrler.remove();
-        },
-      });
+    // this.loading = true;
+    // const ctrler = await this.loadingCtrl.create({
+    //   message: 'Fetching data please wait.',
+    // });
+    // ctrler.present();
+    // this.segmentService
+    //   .getSegment<MediaCenterSegment[]>(Segments.MediaCenter)
+    //   .pipe(takeUntil(this.dispose$))
+    //   .subscribe({
+    //     next: (mediaCenter) => {
+    //       this.loading = false;
+    //       ctrler.remove();
+    //       console.log({ mediaCenter });
+    //       this.segment = mediaCenter;
+    //     },
+    //     error: (err) => {
+    //       console.error(err);
+    //       this.loading = false;
+    //       ctrler.remove();
+    //     },
+    //   });
   }
 
   async getSaveData(
@@ -98,104 +147,32 @@ export class MediaCenterComponent implements OnInit, OnDestroy {
   }
 
   async addNew() {
-    if (!this.segment) return;
     const newRecord = await this.getSaveData(null);
     if (!newRecord) return;
 
-    const segmentData = this.segment.data;
-    this.segment.data = [...segmentData, newRecord];
-
     this.segmentService
       .addRecord<MediaCenterSegment>(Segments.MediaCenter, newRecord)
-      .subscribe({
-        next: (res) => {
-          console.log({ res }, 'ADD RESPONSE');
-        },
-        error: (err) => {
-          console.log({ err });
-          if (!this.segment) return;
-          this.segment.data = [...this.segment.data].filter(
-            (d) => d.id !== newRecord.id
-          );
-        },
-      });
+      .subscribe();
   }
 
   async onEdit(mediaCenter: MediaCenterSegment) {
-    if (!this.segment) return;
-
     const updated = await this.getSaveData(mediaCenter);
     if (!updated) return;
-    const data = [...this.segment.data];
-    const found = data.find((d) => d.id === mediaCenter.id);
-    if (!found) return;
-    const index = data.indexOf(found);
-    data.splice(index, 1, updated);
 
-    this.segment.data = [...data];
     this.segmentService
       .updateRecord(Segments.MediaCenter, mediaCenter.id, updated)
-      .subscribe({
-        next: (res) => {},
-        error: (err) => {
-          if (!this.segment) return;
-          const existingData = [...this.segment.data];
-          existingData.splice(index, 1, found);
-          this.segment.data = existingData;
-        },
-      });
+      .subscribe();
   }
 
   async onDelete(id: number) {
-    if (!this.segment) return;
     const allowed = await this.confirmDialogService.ask();
     if (!allowed) return;
 
-    const data = [...this.segment.data];
-    const found = data.find((d) => d.id === id);
-    if (!found) return;
-    const index = data.indexOf(found);
-
-    this.segment.data = data.filter((d) => d.id !== id);
-
-    this.segmentService.deleteRecord(Segments.MediaCenter, id).subscribe({
-      next: (res) => {
-        console.log({ res }, 'DELETE RESPONSE');
-      },
-      error: (err) => {
-        console.log({ err });
-
-        if (!this.segment) return;
-        const existingData = [...this.segment.data];
-        existingData.splice(index, 0, found);
-        this.segment.data = existingData;
-      },
-    });
+    this.segmentService.deleteRecord(Segments.MediaCenter, id).subscribe();
   }
 
   ngOnDestroy(): void {
     this.dispose$.next();
     this.dispose$.complete();
-  }
-
-  private calculateVisableColumns(breakpoints: {
-    xsm: boolean;
-    sm: boolean;
-    md: boolean;
-    lg: boolean;
-    xlg: boolean;
-  }) {
-    let temp = [...this.availableColumns];
-    if (breakpoints.xsm)
-      temp = temp.filter((d) => !d.hideOn || !d.hideOn.includes('xsm'));
-    if (breakpoints.sm)
-      temp = temp.filter((d) => !d.hideOn || !d.hideOn.includes('sm'));
-    if (breakpoints.md)
-      temp = temp.filter((d) => !d.hideOn || !d.hideOn.includes('md'));
-    if (breakpoints.lg)
-      temp = temp.filter((d) => !d.hideOn || !d.hideOn.includes('lg'));
-    if (breakpoints.xlg)
-      temp = temp.filter((d) => !d.hideOn || !d.hideOn.includes('xlg'));
-    this.displayedColumns = temp.map((t) => t.name);
   }
 }

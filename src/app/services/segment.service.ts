@@ -22,70 +22,15 @@ import {
 import { Segment, Segments } from '../models/data/segment';
 import { MappedSegment } from '../models/data/mapped-segment';
 import { v4 } from 'uuid';
-
-interface CreateAction<T> {
-  type: 'create';
-  segmentName: Segments;
-  record: T;
-}
-
-interface DeleteAction {
-  type: 'delete';
-  segmentName: Segments;
-  recordId: number | string;
-}
-
-interface UpdateRecordAction<T> {
-  type: 'updateRecord';
-  segmentName: Segments;
-  recordId: number | string;
-  record: T;
-}
-
-type OpQueueAction = CreateAction<any> | DeleteAction | UpdateRecordAction<any>;
-
 @Injectable({
   providedIn: 'root',
 })
 export class SegmentService {
-  private subject = new BehaviorSubject<Segment[]>([]);
+  private segmentStream = new BehaviorSubject<Segment[]>([]);
   private dataLoaded = false;
   private busy = false;
 
-  private opQueue$ = new Subject<OpQueueAction>();
-  private doneOps$ = new Subject<OpQueueAction>();
-  private failedOps$ = new Subject<{
-    op: OpQueueAction;
-    error: any;
-  }>();
-
-  constructor(private httpClient: HttpClient) {
-    this.opQueue$
-      .pipe(
-        concatMap((action) =>
-          forkJoin({
-            action: of(action),
-            results: this.performAction(action),
-          }).pipe(
-            tap((op) => {
-              this.doneOps$.next(op.action);
-            }),
-            catchError((err) => {
-              this.failedOps$.next({
-                error: err,
-                op: action,
-              });
-
-              return EMPTY;
-            })
-          )
-        )
-      )
-      .subscribe(({ action, results }) => {
-        console.log({ newSegments: results });
-        this.subject.next(results);
-      });
-  }
+  constructor(private httpClient: HttpClient) {}
 
   getAllSegmentsOnce() {
     return this.getAllSegments().pipe(take(1));
@@ -96,7 +41,7 @@ export class SegmentService {
   }
 
   getAllSegments() {
-    return this.subject.asObservable().pipe(
+    return this.segmentStream.asObservable().pipe(
       tap(this.startLoading),
       filter(() => this.dataLoaded),
       map((data) => [...data])
@@ -106,44 +51,77 @@ export class SegmentService {
   getSegment<T>(segmentName: Segments) {
     return this.getAllSegments().pipe(
       map((ss) => ss.find((s) => s.Title === segmentName)!),
-      map((segment) => {
-        const mapped: MappedSegment<T> = {
-          segmentId: segment.SegmentID,
-          title: segment.Title,
-          data: JSON.parse(segment.Details),
-        };
-        return mapped;
-      })
+      map(this.toMappedSegment<T>)
     );
   }
 
-  addRecord<T>(segmentName: Segments, record: T) {
-    return this.runAction({
-      type: 'create',
-      record,
+  addRecord<T extends { id: string | number }>(
+    segmentName: Segments,
+    record: T
+  ) {
+    return this.eagerUpdateSegmentArray<T>(
       segmentName,
-    });
+      (segment) => {
+        record.id = v4();
+        segment.data = [...segment.data, record];
+        return segment;
+      },
+      (segment) => {
+        const recordIndex = segment.data.findIndex((r) => r.id === record.id);
+        if (recordIndex !== -1) {
+          segment.data.splice(recordIndex, 1);
+        }
+        return segment;
+      }
+    );
   }
 
   deleteRecord(segmentName: Segments, recordId: string | number) {
-    return this.runAction({
-      type: 'delete',
-      recordId,
+    let removedItem: null | { id: number | string } = null;
+    let removedIndex = -1;
+    return this.eagerUpdateSegmentArray<{ id: number | string }>(
       segmentName,
-    });
+      (segment) => {
+        removedItem = segment.data.find((i) => i.id === recordId) || null;
+        if (removedItem) {
+          removedIndex = segment.data.indexOf(removedItem);
+          segment.data = segment.data.filter((d) => d.id !== recordId);
+        }
+        return segment;
+      },
+      (segment) => {
+        if (removedItem && removedIndex) {
+          segment.data.splice(removedIndex, 0, removedItem);
+        }
+        return segment;
+      }
+    );
   }
 
-  updateRecord<T>(
+  updateRecord<T extends { id: string | number }>(
     segmentName: Segments,
     recordId: string | number,
     newRecord: T
   ) {
-    return this.runAction({
-      type: 'updateRecord',
-      recordId,
-      record: newRecord,
+    let oldItem: null | { id: number | string } = null;
+    let oldIndex = -1;
+    return this.eagerUpdateSegmentArray<{ id: number | string }>(
       segmentName,
-    });
+      (segment) => {
+        oldItem = segment.data.find((i) => i.id === recordId) || null;
+        if (oldItem) {
+          oldIndex = segment.data.indexOf(oldItem);
+          segment.data.splice(oldIndex, 1, newRecord);
+        }
+        return segment;
+      },
+      (segment) => {
+        if (oldItem && oldIndex) {
+          segment.data.splice(oldIndex, 1, oldItem);
+        }
+        return segment;
+      }
+    );
   }
 
   private loadAll() {
@@ -154,9 +132,14 @@ export class SegmentService {
     this.httpClient
       .get<Segment[]>(environment.apiUrl + '/SegmentDetail')
       .pipe(finalize(() => (this.busy = false)))
-      .subscribe((templates) => {
-        this.dataLoaded = true;
-        this.subject.next(templates);
+      .subscribe({
+        next: (templates) => {
+          this.dataLoaded = true;
+          this.segmentStream.next(templates);
+        },
+        error: (err) => {
+          this.segmentStream.error(err);
+        },
       });
   }
   private startLoading = () => {
@@ -164,44 +147,62 @@ export class SegmentService {
     this.loadAll();
   };
 
-  private performAction(action: OpQueueAction) {
-    return this.getSegmentOnce<{ id: string | number }[]>(
-      action.segmentName
-    ).pipe(
-      switchMap((segment) => {
-        console.log({ action, segment });
-        if (action.type === 'create') {
-          action.record.id = v4();
-          segment.data = [...segment.data, action.record];
-        } else if (action.type === 'delete') {
-          segment.data = segment.data.filter((s) => s.id !== action.recordId);
-        } else if (action.type === 'updateRecord') {
-          const index = segment.data.findIndex((s) => s.id === action.recordId);
-          if (index !== -1) {
-            const temp = [...segment.data];
-            temp.splice(index, 1, action.record);
-            segment.data = [...temp];
-          }
-        }
+  private toDbSegment = <T>(segment: MappedSegment<T>): Segment => ({
+    SegmentDetailID: segment.segmentId,
+    Details: JSON.stringify(segment.data),
+    Title: segment.title,
+    SegmentID: segment.segmentId,
+  });
 
-        return this.saveSegment(segment);
-      }),
-      switchMap((dbSegment) =>
-        this.getAllSegmentsOnce().pipe(
-          map((allDbSegments) => {
-            console.log({ dbSegment });
-            const index = allDbSegments.findIndex(
-              (s) => s.Title === dbSegment.Title
-            );
-            if (index !== -1) {
-              allDbSegments.splice(index, 1, dbSegment);
-            }
-            return [...allDbSegments];
-          })
-        )
-      )
+  private toMappedSegment = <T>(segment: Segment): MappedSegment<T> => ({
+    segmentId: segment.SegmentID,
+    title: segment.Title,
+    data: JSON.parse(segment.Details),
+  });
+
+  private eagerUpdateSegmentArray<T>(
+    segmentName: Segments,
+    getData: (segment: MappedSegment<T[]>) => MappedSegment<T[]>,
+    handleFailure: (segment: MappedSegment<T[]>) => MappedSegment<T[]>
+  ) {
+    return this.getSegmentOnce<T[]>(segmentName).pipe(
+      switchMap((segment) => {
+        const currentSegmentCopy: typeof segment = JSON.parse(
+          JSON.stringify(segment)
+        );
+        const newSegment = getData(currentSegmentCopy);
+        this.updateStreamWithSegment(newSegment);
+
+        return this.saveSegment(currentSegmentCopy).pipe(
+          map(() => currentSegmentCopy),
+          catchError((err) =>
+            this.getSegmentOnce<T[]>(segmentName).pipe(
+              tap((currentSegment) => {
+                const lastData = handleFailure(
+                  JSON.parse(JSON.stringify(currentSegment))
+                );
+                this.updateStreamWithSegment(lastData);
+                throw err;
+              }),
+              switchMap(() => EMPTY)
+            )
+          )
+        );
+      })
     );
   }
+
+  private updateStreamWithSegment<T>(segment: MappedSegment<T>) {
+    const currentSegments = [...this.segmentStream.getValue()];
+    const segmentIndex = this.getSegmentIndex(segment);
+    currentSegments.splice(segmentIndex, 1, this.toDbSegment(segment));
+
+    this.segmentStream.next(currentSegments);
+  }
+  private getSegmentIndex = <T>(segment: MappedSegment<T>): number => {
+    const currentSegments = this.segmentStream.getValue();
+    return currentSegments.findIndex((s) => s.SegmentID === segment.segmentId);
+  };
 
   private saveSegment<T>(segment: MappedSegment<T>) {
     const dbSegment: Segment = {
@@ -214,30 +215,10 @@ export class SegmentService {
     return of(null).pipe(
       // Simulating a network request
       delay(1000),
-      // tap(() => {
-      //   throw new Error('An error occured while saving the record');
-      // }),
+      tap(() => {
+        throw new Error('An error occured while saving the record');
+      }),
       map(() => dbSegment)
     );
-  }
-
-  private runAction(op: OpQueueAction) {
-    const done$ = this.doneOps$.pipe(
-      filter((o) => o === op),
-      take(1)
-    );
-    const error$ = this.failedOps$.pipe(
-      filter((o) => o.op === op),
-      take(1),
-      switchMap((val) => {
-        throw val;
-        return EMPTY;
-      })
-    );
-
-    return defer(() => {
-      this.opQueue$.next(op);
-      return race(done$, error$);
-    });
   }
 }

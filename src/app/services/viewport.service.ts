@@ -4,7 +4,7 @@ import {
   BreakpointState,
   Breakpoints,
 } from '@angular/cdk/layout';
-import { combineLatest, map, Observable } from 'rxjs';
+import { combineLatest, filter, map, Observable, tap } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -18,7 +18,11 @@ export class ViewportService {
 
   getCurrentBreakpoint(): Observable<'xsm' | 'sm' | 'md' | 'lg' | 'xlg'> {
     return this.observe$.pipe(
+      tap((vals) => {
+        console.log(vals);
+      }),
       map((vals) => Object.entries(vals).find(([key, value]) => value)!),
+      filter((val) => !!val),
       map(([key, value]) => key as any)
     );
   }
