@@ -1,3 +1,36 @@
-<app-navbar-wrapper>
-  <app-list-view [title]="'Header'"></app-list-view>
-</app-navbar-wrapper>
+<app-table-view [title]="'Headers'" #comp [SaveComponent]="SaveComponent" [segmentName]="segmentName"
+  [availableColumns]="availableColumns">
+  <ng-container *ngIf="(comp.view$ | async) as view">
+    <table mat-table [dataSource]="view.segment.data?.data!" class="mat-elevation-z8 w-100">
+      <ng-container matColumnDef="id">
+        <th style="padding-right: 30px;" mat-header-cell *matHeaderCellDef>Id</th>
+        <td mat-cell *matCellDef="let element">{{element.id}}</td>
+      </ng-container>
+      <ng-container matColumnDef="title">
+        <th mat-header-cell *matHeaderCellDef>Title</th>
+        <td mat-cell *matCellDef="let element">{{element.title}}</td>
+      </ng-container>
+      <ng-container matColumnDef="nav">
+        <th [style]="'min-width: ' + (view.currentBreakpoint === 'xsm' ? 60 : 120) + 'px;'" mat-header-cell
+          *matHeaderCellDef>
+          Button Text
+        </th>
+        <td mat-cell *matCellDef="let element">{{element.nav?.text}}</td>
+      </ng-container>
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef>Actions</th>
+        <td [style]="'min-width: ' + (view.currentBreakpoint === 'xsm' ? 10 : 120) + 'px;'" mat-cell
+          *matCellDef="let element">
+          <button (click)="comp.onEdit(element)" color="primary" mat-icon-button>
+            <mat-icon>edit</mat-icon>
+          </button>
+          <button (click)="comp.onDelete(element.id)" color="warn" mat-icon-button>
+            <mat-icon>delete</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+      <tr mat-header-row *matHeaderRowDef="view.visableColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: view.visableColumns;"></tr>
+    </table>
+  </ng-container>
+</app-table-view>

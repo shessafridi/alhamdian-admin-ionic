@@ -1,0 +1,23 @@
+<app-navbar-wrapper>
+  <ng-container *ngIf="(view$ | async) as view">
+    <ng-container *ngIf="view.segment.loading" ngProjectAs="[content]">
+      Loading please wait.
+    </ng-container>
+    <ng-container *ngIf="!view.segment.loading && !view.segment.data">
+      <ion-text>Data Failed to load.</ion-text>
+      <div *ngIf="view.segment.err">
+        Error:
+        <pre>
+          {{view.segment.err | json}}
+        </pre>
+      </div>
+    </ng-container>
+    <ng-container *ngIf="!view.segment.loading && view.segment.data">
+      <app-list-view [title]="title" [showActions]="true" (add)="addNew()">
+        <ng-container ngProjectAs="[table]">
+          <ng-content></ng-content>
+        </ng-container>
+      </app-list-view>
+    </ng-container>
+  </ng-container>
+</app-navbar-wrapper>

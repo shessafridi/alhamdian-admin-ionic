@@ -4,17 +4,12 @@ import { Injectable } from '@angular/core';
 import {
   BehaviorSubject,
   catchError,
-  concatMap,
-  defer,
   delay,
   EMPTY,
   filter,
   finalize,
-  forkJoin,
   map,
   of,
-  race,
-  Subject,
   switchMap,
   take,
   tap,
@@ -215,9 +210,9 @@ export class SegmentService {
     return of(null).pipe(
       // Simulating a network request
       delay(1000),
-      tap(() => {
-        throw new Error('An error occured while saving the record');
-      }),
+      // tap(() => {
+      //   throw new Error('An error occured while saving the record');
+      // }),
       map(() => dbSegment)
     );
   }
