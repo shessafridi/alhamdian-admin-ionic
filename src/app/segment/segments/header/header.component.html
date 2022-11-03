@@ -1,4 +1,4 @@
-<app-table-view [title]="'Headers'" #comp [SaveComponent]="SaveComponent" [segmentName]="segmentName"
+<app-list-view [title]="'Headers'" #comp [SaveComponent]="SaveComponent" [segmentName]="segmentName"
   [availableColumns]="availableColumns">
   <ng-container *ngIf="(comp.view$ | async) as view">
     <table mat-table [dataSource]="view.segment.data?.data!" class="mat-elevation-z8 w-100">
@@ -33,4 +33,4 @@
       <tr mat-row *matRowDef="let row; columns: view.visableColumns;"></tr>
     </table>
   </ng-container>
-</app-table-view>
+</app-list-view>

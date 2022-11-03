@@ -1,14 +1,31 @@
-<div class="list-view">
+<app-navbar-wrapper>
+  <ng-container *ngIf="(view$ | async) as view">
+    <ng-container *ngIf="view.segment.loading" ngProjectAs="[content]">
+      Loading please wait.
+    </ng-container>
+    <ng-container *ngIf="!view.segment.loading && !view.segment.data">
+      <ion-text>Data Failed to load.</ion-text>
+      <div *ngIf="view.segment.err">
+        Error:
+        <pre>
+          {{view.segment.err | json}}
+        </pre>
+      </div>
+    </ng-container>
+    <ng-container *ngIf="!view.segment.loading && view.segment.data">
+      <div class="list-view">
 
-  <div *ngIf="showActions" class="action-button-container">
-    <ion-title size="large" class="title">{{title}}</ion-title>
-    <ion-button color="primary" (click)="addData()" class="action-button">
-      Add New
-    </ion-button>
-  </div>
+        <div class="action-button-container">
+          <ion-title size="large" class="title">{{title}}</ion-title>
+          <ion-button color="primary" (click)="addNew()" class="action-button">
+            Add New
+          </ion-button>
+        </div>
 
-  <div class="table-container">
-    <ng-content select="[table]"></ng-content>
-  </div>
-</div>
-<ng-content select="[content]"></ng-content>
+        <div class="table-container">
+          <ng-content></ng-content>
+        </div>
+      </div>
+    </ng-container>
+  </ng-container>
+</app-navbar-wrapper>

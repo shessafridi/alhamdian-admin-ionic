@@ -3,9 +3,9 @@ import { IonicModule } from '@ionic/angular';
 
 import { ListViewComponent } from './list-view.component';
 
-describe('ListViewComponent', () => {
-  let component: ListViewComponent;
-  let fixture: ComponentFixture<ListViewComponent>;
+describe('TableViewComponent', () => {
+  let component: ListViewComponent<any>;
+  let fixture: ComponentFixture<ListViewComponent<any>>;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
